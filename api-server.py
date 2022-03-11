@@ -120,6 +120,17 @@ def setAnnouncement(userSentData: EncryptedPost, response: Response):
         return {'result': 'failed'}
 
 
+@app.post("/admin/freshCache", status_code=200)
+def forceRefreshCache(userSentData: EncryptedPost, response: Response):
+    userSentData = userSentData.dict()
+    if verifyKey(userSentData['key'], userSentData['parameter']):
+        refreshMeta()
+        return {'result': 'refresh cache successfully'}
+    else:
+        response.status_code = status.HTTP_403_FORBIDDEN
+        return {'result': 'failed'}
+
+
 # 全球区版本分发API
 @app.get('/patch/stable/global')
 def getPatchGlobal():
