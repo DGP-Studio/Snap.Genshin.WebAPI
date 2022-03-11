@@ -5,6 +5,7 @@ import json
 import requests
 import hashlib
 from fastapi import FastAPI, Response, status
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 # 全局变量
@@ -58,7 +59,11 @@ def refreshMeta():
             LatestRelease = release["tag_name"]
 
         # 处理当前release数据
-        thisReleaseDict = {"tag_name": release["tag_name"], "body": release["body"],
+        if findFirstRelease and release["tag_name"] != LatestRelease:
+            patchNoteBody = "该版本已不是最新版本，请更新至最新版！！！\n"
+        else:
+            patchNoteBody = ""
+        thisReleaseDict = {"tag_name": release["tag_name"], "body": patchNoteBody + release["body"],
                            "browser_download_url": release["assets"][0]["browser_download_url"],
                            "asset_name": release["assets"][0]["name"]
                            }
@@ -96,6 +101,10 @@ def checkMetaExpiration():
     if AllReleaseDict == {} or \
             (int(time.time()) - int(AllReleaseDict['cache_timestamp'])) > cacheTime:
         refreshMeta()
+
+
+# 设置主页
+app.mount("/", StaticFiles(directory="static", html=True), name="static")
 
 
 # 管理相关
