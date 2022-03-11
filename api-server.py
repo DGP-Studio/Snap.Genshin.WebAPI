@@ -1,4 +1,5 @@
 # coding=utf8
+from typing import Optional
 import time
 import json
 import requests
