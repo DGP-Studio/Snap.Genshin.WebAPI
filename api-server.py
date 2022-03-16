@@ -82,7 +82,7 @@ def refreshPatchMeta():
 
     # 向文件缓存写入 JSON
     releaseJSON = json.dumps(releaseDict, ensure_ascii=False, indent=4)
-    with open('patch-cache.json', 'w', encoding='utf-8') as json_file:
+    with open('./data/patch-cache.json', 'w', encoding='utf-8') as json_file:
         json_file.write(releaseJSON)
     json_file.close()
 
@@ -188,7 +188,7 @@ def setManifesto(userSentData: EncryptedPost, response: Response):
     userSentData = userSentData.dict()
     if verifyKey(userSentData['key'], userSentData['parameter']):
         newAnnouncement = userSentData['body']
-        with open('manifesto.txt', 'w', encoding='utf-8') as ann_file:
+        with open('./data/manifesto.txt', 'w', encoding='utf-8') as ann_file:
             ann_file.write(newAnnouncement)
         return {'result': 'OK'}
     else:
@@ -199,7 +199,7 @@ def setManifesto(userSentData: EncryptedPost, response: Response):
 # 获取公告
 @app.get("/manifesto")
 def getManifesto():
-    f = open("manifesto.txt", encoding='utf-8')
+    f = open("./data/manifesto.txt", encoding='utf-8')
     text = f.read()
     f.close()
     return {"manifesto": text}
@@ -216,7 +216,7 @@ def refreshCharacterMeta(background_tasks: BackgroundTasks, userSentData: Encryp
     if verifyKey(userSentData['key'], userSentData['parameter']):
         # 判断当前是否有挂起的刷新任务
         if LastPendingCharactersCacheTimestamp != "":
-            expectedFileName = "/characters/characters-" + LastPendingCharactersCacheTimestamp + ".json"
+            expectedFileName = "./data/characters-" + LastPendingCharactersCacheTimestamp + ".json"
             previousTaskFinished = os.path.exists(expectedFileName)
             if previousTaskFinished:
                 # 上一次任务已完成，新缓存已生成
@@ -262,14 +262,15 @@ def refreshCharacterMeta(background_tasks: BackgroundTasks, userSentData: Encryp
 def getLatestCharacters(action: str, background_tasks: BackgroundTasks):
     global LastPendingCharactersCacheTimestamp, LastCharactersCacheTimestamp, CharactersDict
     # If there is memory cache, return it
-    if action == "version" or action == "update":
+    acceptedActions = ["version", "live", "beta"]
+    if action in acceptedActions:
         if CharactersDict != "" and LastCharactersCacheTimestamp != "":
             print("access from memory cache")
             pass
         else:
             # If there is a pending timestamp, check task status
             if LastPendingCharactersCacheTimestamp != "":
-                expectedFileName = "/characters/characters-" + LastPendingCharactersCacheTimestamp + ".json"
+                expectedFileName = "./data/characters-" + LastPendingCharactersCacheTimestamp + ".json"
                 previousTaskFinished = os.path.exists(expectedFileName)
                 # Task finished
                 if previousTaskFinished:
@@ -282,7 +283,7 @@ def getLatestCharacters(action: str, background_tasks: BackgroundTasks):
                     f.close()
                     CharactersDict = text
             elif LastCharactersCacheTimestamp != "":
-                expectedFileName = "/characters/characters-" + LastCharactersCacheTimestamp + ".json"
+                expectedFileName = "./data/characters-" + LastCharactersCacheTimestamp + ".json"
                 f = open(expectedFileName, encoding='utf-8')
                 text = f.read()
                 f.close()
@@ -290,7 +291,7 @@ def getLatestCharacters(action: str, background_tasks: BackgroundTasks):
             else:
                 # 没有任何可能的内存缓存
                 # 检查是否有文件IO缓存
-                files = os.listdir("characters/")
+                files = os.listdir("./data/")
                 latestTimestamp = 0
                 for file in files:
                     timestamp = re.search("(-)(\d)+", file)
@@ -301,7 +302,7 @@ def getLatestCharacters(action: str, background_tasks: BackgroundTasks):
                 if latestTimestamp != 0:
                     print("has assigned timestamp " + str(latestTimestamp) + " to cache")
                     LastCharactersCacheTimestamp = str(latestTimestamp)
-                    expectedFileName = "characters/characters-" + LastCharactersCacheTimestamp + ".json"
+                    expectedFileName = "./data/characters-" + LastCharactersCacheTimestamp + ".json"
                     f = open(expectedFileName, encoding='utf-8')
                     text = f.read()
                     f.close()
@@ -316,9 +317,9 @@ def getLatestCharacters(action: str, background_tasks: BackgroundTasks):
                         "timestamp": "",
                         "result": ""
                     }
-        if action == "update":
+        if action == "live":
             return {
-                "action": "update",
+                "action": "live",
                 "code": "901",
                 "timestamp": LastCharactersCacheTimestamp,
                 "result": CharactersDict
