@@ -1,22 +1,30 @@
 # coding=utf8
 from typing import Optional
+import re
+import os
 import time
 import json
 import requests
 import hashlib
-from fastapi import FastAPI, Response, status
+from fastapi import FastAPI, Response, status, BackgroundTasks
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
+import characters.crawler
 
 # 全局变量
 cacheTime = 600
+charactersCacheTime = 7 * 24 * 60 * 60
 app = FastAPI()
-# 内存缓存
+# 内存缓存 - 版本分发
 AllReleaseDict = {}
 GlobalStablePatch = {}
 CNStablePatch = {}
 LatestRelease = ""
-LastCacheTimestamp = ""
+LastPatchCacheTimestamp = ""
+# 内存缓存 - 角色JSON
+LastCharactersCacheTimestamp = ""
+LastPendingCharactersCacheTimestamp = ""
+CharactersDict = ""
 
 
 class EncryptedPost(BaseModel):
@@ -40,7 +48,7 @@ def verifyKey(encryptedKey, keyParameter):
 
 
 # 刷新全部Release数据
-def refreshMeta():
+def refreshPatchMeta():
     # 读取全部 Release
     githubAPIResult = requests.get("https://api.github.com/repos/DGP-Studio/Snap.Genshin/releases")
     releaseDict = {}
@@ -79,32 +87,32 @@ def refreshMeta():
     json_file.close()
 
     # 写入全局
-    global AllReleaseDict, LastCacheTimestamp, GlobalStablePatch, CNStablePatch
+    global AllReleaseDict, LastPatchCacheTimestamp, GlobalStablePatch, CNStablePatch
     AllReleaseDict = releaseDict
-    LastCacheTimestamp = releaseDict['cache_timestamp']
+    LastPatchCacheTimestamp = releaseDict['cache_timestamp']
     thisRelease = AllReleaseDict[LatestRelease]
     GlobalStablePatch = {'tag_name': thisRelease['tag_name'], 'body': thisRelease['body'],
                          'browser_download_url': thisRelease['browser_download_url'],
-                         'cache_timestamp': LastCacheTimestamp}
+                         'cache_timestamp': LastPatchCacheTimestamp}
     CNStablePatch = {'tag_name': thisRelease['tag_name'], 'body': thisRelease['body'],
                      'browser_download_url':
                          'https://resource.snapgenshin.com/' + thisRelease['asset_name'],
-                     'cache_timestamp': LastCacheTimestamp}
+                     'cache_timestamp': LastPatchCacheTimestamp}
 
     # 返回大字典
     return releaseDict
 
 
 # 检查元数据是否为空或过期
-def checkMetaExpiration():
+def checkPatchMetaExpiration():
     global cacheTime
     if AllReleaseDict == {} or \
             (int(time.time()) - int(AllReleaseDict['cache_timestamp'])) > cacheTime:
-        refreshMeta()
+        refreshPatchMeta()
 
 
 # 设置主页
-#app.mount("/", StaticFiles(directory="static", html=True), name="static")
+# app.mount("/", StaticFiles(directory="static", html=True), name="static")
 
 
 # 管理相关
@@ -129,11 +137,11 @@ def setAnnouncement(userSentData: EncryptedPost, response: Response):
         return {'result': 'failed'}
 
 
-@app.post("/admin/freshCache", status_code=200)
+@app.post("/admin/freshPatchCache", status_code=200)
 def forceRefreshCache(userSentData: EncryptedPost, response: Response):
     userSentData = userSentData.dict()
     if verifyKey(userSentData['key'], userSentData['parameter']):
-        refreshMeta()
+        refreshPatchMeta()
         return {'result': 'refresh cache successfully'}
     else:
         response.status_code = status.HTTP_403_FORBIDDEN
@@ -143,7 +151,7 @@ def forceRefreshCache(userSentData: EncryptedPost, response: Response):
 # 全球区版本分发API
 @app.get('/patch/stable/global')
 def getPatchGlobal():
-    checkMetaExpiration()
+    checkPatchMetaExpiration()
     global GlobalStablePatch
     return GlobalStablePatch
 
@@ -151,7 +159,7 @@ def getPatchGlobal():
 # 中国区版本分发API
 @app.get('/patch/stable/cn')
 def getPatchGlobal():
-    checkMetaExpiration()
+    checkPatchMetaExpiration()
     global CNStablePatch
     return CNStablePatch
 
@@ -159,7 +167,7 @@ def getPatchGlobal():
 # 获取最新稳定版本的更新日志
 @app.get("/patchNote/latest", status_code=200)
 def getLatestPatchNote():
-    checkMetaExpiration()
+    checkPatchMetaExpiration()
     global GlobalStablePatch
     noteBody = GlobalStablePatch['body']
     return {"body": noteBody}
@@ -168,7 +176,7 @@ def getLatestPatchNote():
 # 获取指定版本的更新日志
 @app.get("/patchNote/{version}", status_code=200)
 def getVersionPatchNote(version: str):
-    checkMetaExpiration()
+    checkPatchMetaExpiration()
     global AllReleaseDict
     note = AllReleaseDict[version]['body']
     return {"body": note}
@@ -195,3 +203,136 @@ def getManifesto():
     text = f.read()
     f.close()
     return {"manifesto": text}
+
+
+# 刷新角色信息缓存
+@app.post("/characters/refreshMeta", status_code=200)
+def refreshCharacterMeta(background_tasks: BackgroundTasks, userSentData: EncryptedPost, response: Response):
+    """
+    :return: result: 'OK' if new task generated, 'pending' if a previous task is ongoing
+    """
+    global LastPendingCharactersCacheTimestamp, LastCharactersCacheTimestamp, CharactersDict
+    userSentData = userSentData.dict()
+    if verifyKey(userSentData['key'], userSentData['parameter']):
+        # 判断当前是否有挂起的刷新任务
+        if LastPendingCharactersCacheTimestamp != "":
+            expectedFileName = "/characters/characters-" + LastPendingCharactersCacheTimestamp + ".json"
+            previousTaskFinished = os.path.exists(expectedFileName)
+            if previousTaskFinished:
+                # 上一次任务已完成，新缓存已生成
+                # 复制时间戳到最新版本，重置挂起任务记录
+                LastCharactersCacheTimestamp = LastPendingCharactersCacheTimestamp[:]
+                LastPendingCharactersCacheTimestamp = ""
+                # 将新的JSON文件写入内存
+                f = open(expectedFileName, encoding='utf-8')
+                text = f.read()
+                f.close()
+                CharactersDict = text
+                # 开始新的刷新任务
+                currentTimestamp = str(int(time.time()))
+                background_tasks.add_task(characters.crawler.getAllCharacters, False, currentTimestamp)
+                LastPendingCharactersCacheTimestamp = currentTimestamp
+                return {
+                    "result": "OK",
+                    "message": "A new characters JSON cache is generating at the background",
+                    "timestamp": currentTimestamp
+                }
+            else:
+                # 已有任务但未完成
+                return {
+                    "result": "pending",
+                    "message": "The previous refresh task is still ongoing",
+                    "timestamp": LastPendingCharactersCacheTimestamp
+                }
+        else:
+            currentTimestamp = str(int(time.time()))
+            background_tasks.add_task(characters.crawler.getAllCharacters, False, currentTimestamp)
+            LastPendingCharactersCacheTimestamp = currentTimestamp
+            return {
+                "result": "OK",
+                "message": "A new characters JSON cache is generating at the background",
+                "timestamp": currentTimestamp
+            }
+    else:
+        response.status_code = status.HTTP_403_FORBIDDEN
+        return {'result': 'failed'}
+
+
+@app.get("/characters/{action}")
+def getLatestCharacters(action: str, background_tasks: BackgroundTasks):
+    global LastPendingCharactersCacheTimestamp, LastCharactersCacheTimestamp, CharactersDict
+    # If there is memory cache, return it
+    if action == "version" or action == "update":
+        if CharactersDict != "" and LastCharactersCacheTimestamp != "":
+            print("access from memory cache")
+            pass
+        else:
+            # If there is a pending timestamp, check task status
+            if LastPendingCharactersCacheTimestamp != "":
+                expectedFileName = "/characters/characters-" + LastPendingCharactersCacheTimestamp + ".json"
+                previousTaskFinished = os.path.exists(expectedFileName)
+                # Task finished
+                if previousTaskFinished:
+                    # take pending timestamp to cached timestamp
+                    LastCharactersCacheTimestamp = LastPendingCharactersCacheTimestamp[:]
+                    LastPendingCharactersCacheTimestamp = ""
+                    # 将新的JSON文件写入内存
+                    f = open(expectedFileName, encoding='utf-8')
+                    text = f.read()
+                    f.close()
+                    CharactersDict = text
+            elif LastCharactersCacheTimestamp != "":
+                expectedFileName = "/characters/characters-" + LastCharactersCacheTimestamp + ".json"
+                f = open(expectedFileName, encoding='utf-8')
+                text = f.read()
+                f.close()
+                CharactersDict = text
+            else:
+                # 没有任何可能的内存缓存
+                # 检查是否有文件IO缓存
+                files = os.listdir("characters/")
+                latestTimestamp = 0
+                for file in files:
+                    timestamp = re.search("(-)(\d)+", file)
+                    if timestamp is not None:
+                        timestamp = timestamp[0].replace("-", "")
+                        if int(timestamp) > latestTimestamp:
+                            latestTimestamp = int(timestamp)
+                if latestTimestamp != 0:
+                    print("has assigned timestamp " + str(latestTimestamp) + " to cache")
+                    LastCharactersCacheTimestamp = str(latestTimestamp)
+                    expectedFileName = "characters/characters-" + LastCharactersCacheTimestamp + ".json"
+                    f = open(expectedFileName, encoding='utf-8')
+                    text = f.read()
+                    f.close()
+                    CharactersDict = text
+                else:
+                    currentTimestamp = str(int(time.time()))
+                    background_tasks.add_task(characters.crawler.getAllCharacters, False, currentTimestamp)
+                    LastPendingCharactersCacheTimestamp = currentTimestamp
+                    return {
+                        "action": action,
+                        "code": "903",
+                        "timestamp": "",
+                        "result": ""
+                    }
+        if action == "update":
+            return {
+                "action": "update",
+                "code": "901",
+                "timestamp": LastCharactersCacheTimestamp,
+                "result": CharactersDict
+            }
+        else:
+            return {
+                "action": "version",
+                "code": "902",
+                "timestamp": LastCharactersCacheTimestamp
+            }
+    else:
+        # 调用了错误的方法
+        return {
+            "action": action,
+            "result": "failed",
+            "data": ""
+        }
