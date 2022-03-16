@@ -25,6 +25,8 @@ LastPatchCacheTimestamp = ""
 LastCharactersCacheTimestamp = ""
 LastPendingCharactersCacheTimestamp = ""
 CharactersDict = ""
+# 内存缓存 - 公告
+manifestoCache = ""
 
 
 class EncryptedPost(BaseModel):
@@ -185,11 +187,13 @@ def getVersionPatchNote(version: str):
 # 设置公告
 @app.post("/manifesto/announce", status_code=200)
 def setManifesto(userSentData: EncryptedPost, response: Response):
+    global manifestoCache
     userSentData = userSentData.dict()
     if verifyKey(userSentData['key'], userSentData['parameter']):
         newAnnouncement = userSentData['body']
         with open('./data/manifesto.txt', 'w', encoding='utf-8') as ann_file:
             ann_file.write(newAnnouncement)
+        manifestoCache = newAnnouncement[:]
         return {'result': 'OK'}
     else:
         response.status_code = status.HTTP_403_FORBIDDEN
@@ -199,10 +203,15 @@ def setManifesto(userSentData: EncryptedPost, response: Response):
 # 获取公告
 @app.get("/manifesto")
 def getManifesto():
-    f = open("./data/manifesto.txt", encoding='utf-8')
-    text = f.read()
-    f.close()
-    return {"manifesto": text}
+    global manifestoCache
+    if manifestoCache == "":
+        f = open("./data/manifesto.txt", encoding='utf-8')
+        text = f.read()
+        f.close()
+        manifestoCache = text[:]
+    else:
+        pass
+    return {"manifesto": manifestoCache}
 
 
 # 刷新角色信息缓存
