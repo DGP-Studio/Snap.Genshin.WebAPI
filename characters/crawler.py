@@ -630,11 +630,7 @@ def getAllCharacters(getBetaCharacters: False, timestampString):
                 thisCharacterDict["GachaSplash"] = characterInfo[12]
 
                 allCharactersList.append(thisCharacterDict)
-
-        newFileList = json.dumps({
-            "timestamp": timestampString,
-            "data": allCharactersList
-        }, ensure_ascii=False, indent=4, separators=(',', ':'))
+        newFileList = json.dumps(allCharactersList, ensure_ascii=False, indent=4, separators=(',', ':'))
         if getBetaCharacters:
             newFileName = "characters/beta-characters-" + timestampString + ".json"
         else:
