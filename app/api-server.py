@@ -9,7 +9,7 @@ import hashlib
 from fastapi import FastAPI, Response, status, BackgroundTasks
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
-import characters.crawler
+from app.characters import crawler
 
 # 全局变量
 cacheTime = 600
@@ -37,7 +37,7 @@ class EncryptedPost(BaseModel):
 
 # 验证POST Key
 def verifyKey(encryptedKey, keyParameter):
-    with open("setting.json", 'r', encoding='utf-8') as setting_json:
+    with open("./config/config.json", 'r', encoding='utf-8') as setting_json:
         currentKey = json.load(setting_json)['key']
     # 加密方法
     keyValue = currentKey + keyParameter[::-1] + "masterain"
@@ -130,7 +130,7 @@ def setAnnouncement(userSentData: EncryptedPost, response: Response):
     if verifyKey(userSentData['key'], userSentData['parameter']):
         newSetting = {'key': userSentData['body']}
         setting_json = json.dumps(newSetting, ensure_ascii=False, indent=4)
-        with open('setting.json', 'w', encoding='utf-8') as json_file:
+        with open('./config/config.json', 'w', encoding='utf-8') as json_file:
             json_file.write(setting_json)
         json_file.close()
         return {'result': 'OK'}
@@ -239,7 +239,7 @@ def refreshCharacterMeta(background_tasks: BackgroundTasks, userSentData: Encryp
                 CharactersDict = text
                 # 开始新的刷新任务
                 currentTimestamp = str(int(time.time()))
-                background_tasks.add_task(characters.crawler.getAllCharacters, False, currentTimestamp)
+                background_tasks.add_task(crawler.getAllCharacters, False, currentTimestamp)
                 LastPendingCharactersCacheTimestamp = currentTimestamp
                 return {
                     "result": "OK",
@@ -255,7 +255,7 @@ def refreshCharacterMeta(background_tasks: BackgroundTasks, userSentData: Encryp
                 }
         else:
             currentTimestamp = str(int(time.time()))
-            background_tasks.add_task(characters.crawler.getAllCharacters, False, currentTimestamp)
+            background_tasks.add_task(crawler.getAllCharacters, False, currentTimestamp)
             LastPendingCharactersCacheTimestamp = currentTimestamp
             return {
                 "result": "OK",
@@ -271,7 +271,7 @@ def refreshCharacterMeta(background_tasks: BackgroundTasks, userSentData: Encryp
 def getLatestCharacters(action: str, background_tasks: BackgroundTasks):
     global LastPendingCharactersCacheTimestamp, LastCharactersCacheTimestamp, CharactersDict
     # If there is memory cache, return it
-    acceptedActions = ["version", "live", "beta"]
+    acceptedActions = ["version", "live"]
     if action in acceptedActions:
         if CharactersDict != "" and LastCharactersCacheTimestamp != "":
             print("access from memory cache")
@@ -318,7 +318,7 @@ def getLatestCharacters(action: str, background_tasks: BackgroundTasks):
                     CharactersDict = text
                 else:
                     currentTimestamp = str(int(time.time()))
-                    background_tasks.add_task(characters.crawler.getAllCharacters, False, currentTimestamp)
+                    background_tasks.add_task(crawler.getAllCharacters, False, currentTimestamp)
                     LastPendingCharactersCacheTimestamp = currentTimestamp
                     return {
                         "action": action,

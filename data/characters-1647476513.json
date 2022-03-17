@@ -32,8 +32,8 @@
             "Source":"https://genshin.honeyhunterworld.com/img/upgrade/material/i_43.png"
         },
         "Weekly":{
-            "City":"ERROR: CANNOT FIND WEEKLY ITEM CITY",
-            "Name":"Tail of Boreas",
+            "City":"Mondstadt",
+            "Name":"北风之尾",
             "Star":"https://genshin.honeyhunterworld.com/img/back/item/5star.png",
             "Source":"https://genshin.honeyhunterworld.com/img/upgrade/guide/i_464.png"
         },
@@ -2984,7 +2984,7 @@
         },
         "CharStat":[
             {
-                "Name":"Base HP",
+                "Name":"基础生命值",
                 "Values":{
                     "1":"1030",
                     "20":"2671",
@@ -3003,7 +3003,7 @@
                 }
             },
             {
-                "Name":"Base ATK",
+                "Name":"基础攻击力",
                 "Values":{
                     "1":"27",
                     "20":"69",
@@ -3022,7 +3022,7 @@
                 }
             },
             {
-                "Name":"Base DEF",
+                "Name":"基础防御力",
                 "Values":{
                     "1":"58",
                     "20":"152",
@@ -3041,7 +3041,7 @@
                 }
             },
             {
-                "Name":"CRIT DMG",
+                "Name":"暴击伤害",
                 "Values":{
                     "1":"50%",
                     "20":"50%",
@@ -3060,7 +3060,7 @@
                 }
             },
             {
-                "Name":"CRIT Rate",
+                "Name":"暴击率",
                 "Values":{
                     "1":"5%",
                     "20":"5%",
@@ -3082,42 +3082,42 @@
         "Constellation":{
             "Constellation1":{
                 "Source":"https://genshin.honeyhunterworld.com/img/skills/c_511.png",
-                "Name":"Tidal Illusion",
-                "Description":"Every time Icetide Vortex's Grimheart stacks are consumed, Eula's Physical DMG is increased by 30% for 6s. Each stack consumed will increase the duration of this effect by 6s up to a maximum of 18s."
+                "Name":"光潮的幻象",
+                "Description":"消耗冰潮的涡旋的冷酷之心效果后，优菈的物理伤害加成提高30%，持续6秒， 每消耗一层冷酷之心，都会使这个效果的持续时间延长6秒，最多不会超过18秒。"
             },
             "Constellation2":{
                 "Source":"https://genshin.honeyhunterworld.com/img/skills/c_512.png",
-                "Name":"Lady of Seafoam",
-                "Description":"#Decreases the CD of Icetide Vortex's Holding Mode, rendering it identical to Press CD."
+                "Name":"海沫的少女",
+                "Description":"缩短冰潮的涡旋长按的冷却时间，使其降低至与点按的冷却时间相同。"
             },
             "Constellation3":{
                 "Source":"https://genshin.honeyhunterworld.com/img/skills/c_513.png",
-                "Name":"Lawrence Pedigree",
-                "Description":"Increases the Level of Glacial Illumination by 3. Maximum upgrade level is 15."
+                "Name":"劳伦斯的血脉",
+                "Description":"凝浪之光剑的技能等级提高3级。 至多提升至15级。"
             },
             "Constellation4":{
                 "Source":"https://genshin.honeyhunterworld.com/img/skills/c_514.png",
-                "Name":"The Obstinacy of One's Inferiors",
-                "Description":"Lightfall Swords deal 25% increased DMG against opponents with less than 50% HP."
+                "Name":"自卑者的逞强",
+                "Description":"对生命值低于50%的敌人，光降之剑造成的伤害提高25%。"
             },
             "Constellation5":{
                 "Source":"https://genshin.honeyhunterworld.com/img/skills/c_515.png",
-                "Name":"Chivalric Quality",
-                "Description":"Increases the Level of Icetide Vortex by 3. Maximum upgrade level is 15."
+                "Name":"骑士的素质",
+                "Description":"冰潮的涡旋的技能等级提高3级。 至多提升至15级。"
             },
             "Constellation6":{
                 "Source":"https://genshin.honeyhunterworld.com/img/skills/c_516.png",
-                "Name":"Noble Obligation",
-                "Description":"Lightfall Swords created by Glacial Illumination start with 5 stacks of energy. Normal Attacks, Elemental Skills, and Elemental Bursts have a 50% chance to grant the Lightfall Sword an additional stack of energy."
+                "Name":"高贵者的义务",
+                "Description":"凝浪之光剑创造的光降之剑立即获得5层能量。普通攻击、元素战技或元素爆发造成伤害使其积蓄能量层数时，有50%的概率额外获得一层。"
             }
         },
         "NormalAttack":{
-            "Name":"Normal Attack: Favonius Bladework - Edel",
+            "Name":"普通攻击·西风剑术·宗室",
             "Source":"https://genshin.honeyhunterworld.com/img/skills/s_513101.png",
-            "Description":"Normal\nAttack\nPerform\nup\nto\n5\nconsecutive\nstrikes.\nCharged\nAttack\nDrains\nStamina\nover\ntime\nto\nperform\ncontinuous\nslashes.\nAt\nthe\nend\nof\nthe\nsequence,\nperform\na\nmore\npowerful\nslash.\nPlunging\nAttack\nPlunges\nfrom\nmid-air\nto\nstrike\nthe\nground,\ndamaging\nopponents\nalong\nthe\npath\nand\ndealing\nAoE\nDMG\nupon\nimpact.",
+            "Description":"普通攻击\n进行至多五段的连续挥砍。\n重击\n持续消耗体力，快速进行连续的斩击。\n重击结束时，会进行一次格外有力的挥砍。\n下落攻击\n从空中下坠冲击地面，攻击下落路径上的敌人，并在落地时造成范围伤害。",
             "Table":[
                 {
-                    "Name":"1-Hit DMG",
+                    "Name":"一段伤害",
                     "Values":{
                         "Lv1":"89.73%",
                         "Lv2":"97.04%",
@@ -3137,7 +3137,7 @@
                     }
                 },
                 {
-                    "Name":"2-Hit DMG",
+                    "Name":"二段伤害",
                     "Values":{
                         "Lv1":"93.55%",
                         "Lv2":"101.17%",
@@ -3157,7 +3157,7 @@
                     }
                 },
                 {
-                    "Name":"3-Hit DMG",
+                    "Name":"三段伤害",
                     "Values":{
                         "Lv1":"56.8% + 56.8%",
                         "Lv2":"61.42% + 61.42%",
@@ -3177,7 +3177,7 @@
                     }
                 },
                 {
-                    "Name":"4-Hit DMG",
+                    "Name":"四段伤害",
                     "Values":{
                         "Lv1":"112.64%",
                         "Lv2":"121.81%",
@@ -3197,7 +3197,7 @@
                     }
                 },
                 {
-                    "Name":"5-Hit DMG",
+                    "Name":"五段伤害",
                     "Values":{
                         "Lv1":"71.83% + 71.83%",
                         "Lv2":"77.68% + 77.68%",
@@ -3217,7 +3217,7 @@
                     }
                 },
                 {
-                    "Name":"Charged Attack Spinning DMG",
+                    "Name":"重击循环伤害",
                     "Values":{
                         "Lv1":"68.8%",
                         "Lv2":"74.4%",
@@ -3237,7 +3237,7 @@
                     }
                 },
                 {
-                    "Name":"Charged Attack Final DMG",
+                    "Name":"重击终结伤害",
                     "Values":{
                         "Lv1":"124.4%",
                         "Lv2":"134.52%",
@@ -3257,7 +3257,7 @@
                     }
                 },
                 {
-                    "Name":"Charged Attack Stamina Cost",
+                    "Name":"重击体力消耗",
                     "Values":{
                         "Lv1":"40/s",
                         "Lv2":"40/s",
@@ -3277,7 +3277,7 @@
                     }
                 },
                 {
-                    "Name":"Max Duration",
+                    "Name":"最大持续时间",
                     "Values":{
                         "Lv1":"5s",
                         "Lv2":"5s",
@@ -3297,7 +3297,7 @@
                     }
                 },
                 {
-                    "Name":"Plunge DMG",
+                    "Name":"下坠期间伤害",
                     "Values":{
                         "Lv1":"74.59%",
                         "Lv2":"80.66%",
@@ -3317,7 +3317,7 @@
                     }
                 },
                 {
-                    "Name":"Low/High Plunge DMG",
+                    "Name":"低空/高空坠地冲击伤害",
                     "Values":{
                         "Lv1":"149.14% / 186.29%",
                         "Lv2":"161.28% / 201.45%",
@@ -3339,12 +3339,12 @@
             ]
         },
         "TalentE":{
-            "Name":"Icetide Vortex",
+            "Name":"冰潮的涡旋",
             "Source":"https://genshin.honeyhunterworld.com/img/skills/s_513201.png",
-            "Description":"#Sharp\nfrost,\nswift\nblade.\nPress\nSlashes\nswiftly,\ndealing\nCryo\nDMG.\nWhen\nit\nhits\nan\nopponent,\nEula\ngains\na\nstack\nof\nGrimheart\nthat\nstacks\nup\nto\n2\ntimes.\nThese\nstacks\ncan\nonly\nbe\ngained\nonce\nevery\n0.3s.\nGrimheart\nIncreases\nEula's\nresistance\nto\ninterruption\nand\nDEF.\nHold\nWielding\nher\nsword,\nEula\nconsumes\nall\nthe\nstacks\nof\nGrimheart\nand\nlashes\nforward,\ndealing\nAoE\nCryo\nDMG\nto\nopponents\nin\nfront\nof\nher.\nIf\nGrimheart\nstacks\nare\nconsumed,\nsurrounding\nopponents\nwill\nhave\ntheir\nPhysical\nRES\nand\nCryo\nRES\ndecreased.\nEach\nconsumed\nstack\nof\nGrimheart\nwill\nbe\nconverted\ninto\nan\nIcewhirl\nBrand\nthat\ndeals\nCryo\nDMG\nto\nnearby\nopponents.",
+            "Description":"极寒的冰气、迅捷的剑舞。\n点按\n快速挥斩，造成冰元素伤害。\n命中敌人时，优菈自己获得一层冷酷之心效果，最多叠加2次，每0.3秒内只能触发1次。\n冷酷之心\n提高优菈的抗打断能力和防御力。\n长按\n消耗所有的冷酷之心效果，并挥舞大剑向前挥砍，对前方的敌人造成冰元素范围伤害。\n若消耗了冷酷之心效果，会使身边的敌人的物理抗性与冰元素抗性降低。\n每一层被消耗的冷酷之心会转化为一柄冰涡之剑，对附近的敌人造成冰元素伤害。",
             "Table":[
                 {
-                    "Name":"Press DMG",
+                    "Name":"点按伤害",
                     "Values":{
                         "Lv1":"146.4%",
                         "Lv2":"157.38%",
@@ -3364,7 +3364,7 @@
                     }
                 },
                 {
-                    "Name":"Hold DMG",
+                    "Name":"长按伤害",
                     "Values":{
                         "Lv1":"245.6%",
                         "Lv2":"264.02%",
@@ -3384,7 +3384,7 @@
                     }
                 },
                 {
-                    "Name":"Icewhirl Brand DMG",
+                    "Name":"冰涡之剑伤害",
                     "Values":{
                         "Lv1":"96%",
                         "Lv2":"103.2%",
@@ -3404,7 +3404,7 @@
                     }
                 },
                 {
-                    "Name":"DEF Bonus",
+                    "Name":"防御力提升",
                     "Values":{
                         "Lv1":"30% Per Stack",
                         "Lv2":"30% Per Stack",
@@ -3424,7 +3424,7 @@
                     }
                 },
                 {
-                    "Name":"Grimheart Duration",
+                    "Name":"冷酷之心持续时间",
                     "Values":{
                         "Lv1":"18s",
                         "Lv2":"18s",
@@ -3444,7 +3444,7 @@
                     }
                 },
                 {
-                    "Name":"Physical RES Decrease",
+                    "Name":"物理抗性降低",
                     "Values":{
                         "Lv1":"16%",
                         "Lv2":"17%",
@@ -3464,7 +3464,7 @@
                     }
                 },
                 {
-                    "Name":"Cryo RES Decrease",
+                    "Name":"冰元素抗性降低",
                     "Values":{
                         "Lv1":"16%",
                         "Lv2":"17%",
@@ -3484,7 +3484,7 @@
                     }
                 },
                 {
-                    "Name":"RES Decrease Duration",
+                    "Name":"抗性降低时间",
                     "Values":{
                         "Lv1":"7s",
                         "Lv2":"7s",
@@ -3504,7 +3504,7 @@
                     }
                 },
                 {
-                    "Name":"Press CD",
+                    "Name":"点按冷却时间",
                     "Values":{
                         "Lv1":"4s",
                         "Lv2":"4s",
@@ -3524,7 +3524,7 @@
                     }
                 },
                 {
-                    "Name":"CD (hold)",
+                    "Name":"长按冷却时间",
                     "Values":{
                         "Lv1":"10s",
                         "Lv2":"10s",
@@ -3546,12 +3546,12 @@
             ]
         },
         "TalentQ":{
-            "Name":"Glacial Illumination",
+            "Name":"凝浪之光剑",
             "Source":"https://genshin.honeyhunterworld.com/img/skills/s_513901.png",
-            "Description":"Brandishes\nher\ngreatsword,\ndealing\nCryo\nDMG\nto\nnearby\nopponents\nand\ncreating\na\nLightfall\nSword\nthat\nfollows\nher\naround\nfor\na\nduration\nof\nup\nto\n7s.\nWhile\npresent,\nthe\nLightfall\nSword\nincreases\nEula's\nresistance\nto\ninterruption.\nWhen\nEula's\nown\nNormal\nAttack,\nElemental\nSkill,\nand\nElemental\nBurst\ndeal\nDMG\nto\nopponents,\nthey\nwill\ncharge\nthe\nLightfall\nSword,\nwhich\ncan\ngain\nan\nenergy\nstack\nonce\nevery\n0.1s.\nOnce\nits\nduration\nends,\nthe\nLightfall\nSword\nwill\ndescend\nand\nexplode\nviolently,\ndealing\nPhysical\nDMG\nto\nnearby\nopponents.\nThis\nDMG\nscales\non\nthe\nnumber\nof\nenergy\nstacks\nthe\nLightfall\nSword\nhas\naccumulated.\nIf\nEula\nleaves\nthe\nfield,\nthe\nLightfall\nSword\nwill\nexplode\nimmediately.",
+            "Description":"猛烈挥舞大剑，对周围的敌人造成冰元素伤害，并创造一柄跟随自己，至多持续存在7秒的光降之剑。\n在持续期间内，光降之剑会提高优菈自己的抗打断能力，并在优菈自己的普通攻击、元素战技或元素爆发对敌人造成伤害时，为光降之剑积蓄能量。每0.1秒只能积攒一层能量。\n持续时间结束后，光降之剑会降下并猛烈爆发，对周围的敌人造成物理伤害。\n此伤害受益于光降之剑积蓄的能量层数。\n优菈退场时，光降之剑会立即爆发。",
             "Table":[
                 {
-                    "Name":"Skill DMG",
+                    "Name":"技能伤害",
                     "Values":{
                         "Lv1":"245.6%",
                         "Lv2":"264.02%",
@@ -3571,7 +3571,7 @@
                     }
                 },
                 {
-                    "Name":"Lightfall Sword Base DMG",
+                    "Name":"光降之剑基础伤害",
                     "Values":{
                         "Lv1":"367.05%",
                         "Lv2":"396.92%",
@@ -3591,7 +3591,7 @@
                     }
                 },
                 {
-                    "Name":"DMG Per Stack",
+                    "Name":"每层能量伤害",
                     "Values":{
                         "Lv1":"74.99%",
                         "Lv2":"81.1%",
@@ -3611,7 +3611,7 @@
                     }
                 },
                 {
-                    "Name":"Maximum Stacks",
+                    "Name":"能量层数上限",
                     "Values":{
                         "Lv1":"30",
                         "Lv2":"30",
@@ -3631,7 +3631,7 @@
                     }
                 },
                 {
-                    "Name":"CD",
+                    "Name":"冷却时间",
                     "Values":{
                         "Lv1":"20s",
                         "Lv2":"20s",
@@ -3651,7 +3651,7 @@
                     }
                 },
                 {
-                    "Name":"Energy Cost",
+                    "Name":"元素能量",
                     "Values":{
                         "Lv1":"80",
                         "Lv2":"80",
@@ -3675,23 +3675,23 @@
         "PassiveTalents":[
             {
                 "Source":"https://genshin.honeyhunterworld.com/img/skills/p_512301.png",
-                "Name":"Aristocratic Introspection",
-                "Description":"When Eula crafts Character Talent Materials, she has a 10% chance to receive double the product."
+                "Name":"贵族的自省",
+                "Description":"合成角色天赋素材时，有10%概率获得2倍产出。"
             },
             {
                 "Source":"https://genshin.honeyhunterworld.com/img/skills/p_512101.png",
-                "Name":"Roiling Rime",
-                "Description":"If 2 stacks of Grimheart are consumed upon unleashing the Holding Mode of Icetide Vortex, a Shattered Lightfall Sword will be created that will explode immediately, dealing 50% of the basic Physical DMG dealt by a Lightfall Sword created by Glacial Illumination."
+                "Name":"潮卷冰削",
+                "Description":"长按施放冰潮的涡旋时，若一次性消耗了2层冷酷之心效果，则创造会立即爆发的残缺光降之剑，造成相当于凝浪之光剑的光降之剑基础伤害50%的物理伤害。"
             },
             {
                 "Source":"https://genshin.honeyhunterworld.com/img/skills/p_512201.png",
-                "Name":"Wellspring of War-Lust",
-                "Description":"When Glacial Illumination is cast, the CD of Icetide Vortex is reset and Eula gains 1 stack of Grimheart."
+                "Name":"战欲涌现",
+                "Description":"施放凝浪之光剑时，重置冰潮的涡旋的冷却时间，并为优菈赋予一层冷酷之心效果。"
             }
         ],
-        "Title":"Dance of the Shimmering Wave",
-        "AstrolabeName":"Aphros Delos",
-        "Description":"The Spindrift Knight, a scion of the old aristocracy, and the Captain of the Knights of Favonius Reconnaissance Company. The reason for which a descendant of the ancient nobles might join the Knights remains a great mystery in Mondstadt to this very day.",
+        "Title":"浪沫的旋舞",
+        "AstrolabeName":"浪沫座",
+        "Description":"古老家族出身的「浪花骑士」，西风骑士团游击小队队长。身为旧贵族后裔却加入了堪称死对头的西风骑士团，该事件至今仍是蒙德一大谜团。",
         "Profile":"https://genshin.honeyhunterworld.com/img/cardicon/i_7065_party.png",
         "Source":"https://genshin.honeyhunterworld.com/img/char/eula_face.png",
         "GachaCard":"https://genshin.honeyhunterworld.com/img/char/eula_gacha_card.png",
@@ -10586,8 +10586,8 @@
             "Source":"https://genshin.honeyhunterworld.com/img/upgrade/material/i_23.png"
         },
         "Weekly":{
-            "City":"ERROR: CANNOT FIND WEEKLY ITEM CITY",
-            "Name":"Tail of Boreas",
+            "City":"Mondstadt",
+            "Name":"北风之尾",
             "Star":"https://genshin.honeyhunterworld.com/img/back/item/5star.png",
             "Source":"https://genshin.honeyhunterworld.com/img/upgrade/guide/i_464.png"
         },
@@ -19380,14 +19380,14 @@
             "Source":"https://genshin.honeyhunterworld.com/img/upgrade/material/i_33.png"
         },
         "Weekly":{
-            "City":"ERROR: CANNOT FIND WEEKLY ITEM CITY",
-            "Name":"Tail of Boreas",
+            "City":"Mondstadt",
+            "Name":"北风之尾",
             "Star":"https://genshin.honeyhunterworld.com/img/back/item/5star.png",
             "Source":"https://genshin.honeyhunterworld.com/img/upgrade/guide/i_464.png"
         },
         "CharStat":[
             {
-                "Name":"基础生命值",
+                "Name":"Base HP",
                 "Values":{
                     "1":"857",
                     "20":"2202",
@@ -19406,7 +19406,7 @@
                 }
             },
             {
-                "Name":"基础攻击力",
+                "Name":"Base ATK",
                 "Values":{
                     "1":"17",
                     "20":"43",
@@ -19425,7 +19425,7 @@
                 }
             },
             {
-                "Name":"基础防御力",
+                "Name":"Base DEF",
                 "Values":{
                     "1":"64",
                     "20":"163",
@@ -19444,7 +19444,7 @@
                 }
             },
             {
-                "Name":"攻击力",
+                "Name":"ATK",
                 "Values":{
                     "1":"0%",
                     "20":"0%",
@@ -19463,7 +19463,7 @@
                 }
             },
             {
-                "Name":"暴击率",
+                "Name":"CRIT Rate",
                 "Values":{
                     "1":"5%",
                     "20":"5%",
@@ -19485,42 +19485,42 @@
         "Constellation":{
             "Constellation1":{
                 "Source":"https://genshin.honeyhunterworld.com/img/skills/c_251.png",
-                "Name":"重帘留香",
-                "Description":"雨帘剑的最大数量增加1柄。"
+                "Name":"The Scent Remained",
+                "Description":"Increases the maximum number of Rain Swords by 1."
             },
             "Constellation2":{
                 "Source":"https://genshin.honeyhunterworld.com/img/skills/c_252.png",
-                "Name":"天青现虹",
-                "Description":"古华剑 • 裁雨留虹的持续时间延长3秒； 此外，受到剑雨攻击的敌人，水元素抗性降低15%，持续4秒。"
+                "Name":"Rainbow Upon the Azure Sky",
+                "Description":"Extends the duration of Guhua Sword: Raincutter by 3s. Decreases the Hydro RES of opponents hit by sword rain attacks by 15% for 4s."
             },
             "Constellation3":{
                 "Source":"https://genshin.honeyhunterworld.com/img/skills/c_253.png",
-                "Name":"织诗成锦",
-                "Description":"古华剑 • 裁雨留虹的技能等级提高3级。 至多提升至15级。"
+                "Name":"Weaver of Verses",
+                "Description":"Increases the Level of Guhua Sword: Raincutter by 3. Maximum upgrade level is 15."
             },
             "Constellation4":{
                 "Source":"https://genshin.honeyhunterworld.com/img/skills/c_254.png",
-                "Name":"孤舟斩蛟",
-                "Description":"在古华剑 • 裁雨留虹效果持续期间，古华剑 • 画雨笼山造成的伤害提升50%。"
+                "Name":"Evilsoother",
+                "Description":"Throughout the duration of Guhua Sword: Raincutter, the DMG dealt by Guhua Sword: Fatal Rainscreen is increased by 50%."
             },
             "Constellation5":{
                 "Source":"https://genshin.honeyhunterworld.com/img/skills/c_255.png",
-                "Name":"雨深闭门",
-                "Description":"古华剑 • 画雨笼山的技能等级提高3级。 至多提升至15级。"
+                "Name":"Embrace of Rain",
+                "Description":"Increases the Level of Guhua Sword: Fatal Rainscreen by 3. Maximum upgrade level is 15."
             },
             "Constellation6":{
                 "Source":"https://genshin.honeyhunterworld.com/img/skills/c_256.png",
-                "Name":"万文集此",
-                "Description":"古华剑 • 裁雨留虹每发动2次剑雨攻击，就大幅增强下一次剑雨攻击，并在命中敌人时为行秋恢复3点元素能量。"
+                "Name":"Hence, Call Them My Own Verses",
+                "Description":"Activating 2 of Guhua Sword: Raincutter's sword rain attacks greatly enhances the third sword rain attack. On hit, the third sword rain attack also regenerates 3 Energy for Xingqiu."
             }
         },
         "NormalAttack":{
-            "Name":"普通攻击·古华剑法",
+            "Name":"Normal Attack: Guhua Style",
             "Source":"https://genshin.honeyhunterworld.com/img/skills/s_253101.png",
-            "Description":"普通攻击\n进行至多五段的连续剑击。\n重击\n消耗一定体力，瞬间向前方挥出两剑。\n下落攻击\n从空中下坠冲击地面，攻击下落路径上的敌人，并在落地时造成范围伤害。",
+            "Description":"Normal\nAttack\nPerform\nup\nto\n5\nrapid\nstrikes.\nCharged\nAttack\nConsumes\na\ncertain\namount\nof\nStamina\nto\nunleash\n2\nrapid\nsword\nstrikes.\nPlunging\nAttack\nPlunges\nfrom\nmid-air\nto\nstrike\nthe\nground\nbelow,\ndamaging\nopponents\nalong\nthe\npath\nand\ndealing\nAoE\nDMG\nupon\nimpact.",
             "Table":[
                 {
-                    "Name":"一段伤害",
+                    "Name":"1-Hit DMG",
                     "Values":{
                         "Lv1":"46.61%",
                         "Lv2":"50.41%",
@@ -19540,7 +19540,7 @@
                     }
                 },
                 {
-                    "Name":"二段伤害",
+                    "Name":"2-Hit DMG",
                     "Values":{
                         "Lv1":"47.64%",
                         "Lv2":"51.52%",
@@ -19560,7 +19560,7 @@
                     }
                 },
                 {
-                    "Name":"三段伤害",
+                    "Name":"3-Hit DMG",
                     "Values":{
                         "Lv1":"28.55% + 28.55%",
                         "Lv2":"30.88% + 30.88%",
@@ -19580,7 +19580,7 @@
                     }
                 },
                 {
-                    "Name":"四段伤害",
+                    "Name":"4-Hit DMG",
                     "Values":{
                         "Lv1":"55.99%",
                         "Lv2":"60.54%",
@@ -19600,7 +19600,7 @@
                     }
                 },
                 {
-                    "Name":"五段伤害",
+                    "Name":"5-Hit DMG",
                     "Values":{
                         "Lv1":"35.86% + 35.86%",
                         "Lv2":"38.78% + 38.78%",
@@ -19620,7 +19620,7 @@
                     }
                 },
                 {
-                    "Name":"重击伤害",
+                    "Name":"Charged Attack DMG",
                     "Values":{
                         "Lv1":"47.3% + 56.16%",
                         "Lv2":"51.15% + 60.73%",
@@ -19640,7 +19640,7 @@
                     }
                 },
                 {
-                    "Name":"重击体力消耗",
+                    "Name":"Charged Attack Stamina Cost",
                     "Values":{
                         "Lv1":"20",
                         "Lv2":"20",
@@ -19660,7 +19660,7 @@
                     }
                 },
                 {
-                    "Name":"下坠期间伤害",
+                    "Name":"Plunge DMG",
                     "Values":{
                         "Lv1":"63.93%",
                         "Lv2":"69.14%",
@@ -19680,7 +19680,7 @@
                     }
                 },
                 {
-                    "Name":"低空/高空坠地冲击伤害",
+                    "Name":"Low/High Plunge DMG",
                     "Values":{
                         "Lv1":"127.84% / 159.68%",
                         "Lv2":"138.24% / 172.67%",
@@ -19702,12 +19702,12 @@
             ]
         },
         "TalentE":{
-            "Name":"古华剑·画雨笼山",
+            "Name":"Guhua Sword: Fatal Rainscreen",
             "Source":"https://genshin.honeyhunterworld.com/img/skills/s_253201.png",
-            "Description":"使出连续两段的剑技，对前方的敌人造成水元素伤害。同时，生成最大数量的雨帘剑围绕在当前场上自己的角色身边。\n具有如下特性：\n•\n角色受到伤害时会破碎，降低受到的伤害；\n•\n提高角色的抗打断能力。\n行秋水元素伤害加成的20%将转换为雨帘剑的额外伤害减免。\n最多通过这种方式获得24%额外伤害减免。\n初始雨帘剑的最大数量为3柄。\n施放的瞬间，为角色施加潮湿状态。",
+            "Description":"Xingqiu\nperforms\ntwin\nstrikes\nwith\nhis\nsword,\ndealing\nHydro\nDMG.\nAt\nthe\nsame\ntime,\nthis\nability\ncreates\nthe\nmaximum\nnumber\nof\nRain\nSwords,\nwhich\nwill\norbit\nyour\nactive\ncharacter.\nThe\nRain\nSwords\nhave\nthe\nfollowing\nproperties:\n•\nWhen\na\ncharacter\ntakes\nDMG,\nthe\nRain\nSword\nwill\nshatter,\nreducing\nthe\namount\nof\nDMG\ntaken.\n•\nIncreases\nthe\ncharacter's\nresistance\nto\ninterruption.\n20%\nof\nXingqiu's\nHydro\nDMG\nBonus\nwill\nbe\nconverted\nto\nadditional\nDMG\nReduction\nfor\nthe\nRain\nSwords.\nThe\nmaximum\namount\nof\nadditional\nDMG\nReduction\nthat\ncan\nbe\ngained\nthis\nway\nis\n24%.\nThe\ninitial\nmaximum\nnumber\nof\nRain\nSwords\nis\n3.\nUsing\nthis\nability\napplies\nthe\nWet\nstatus\nonto\nthe\ncharacter.",
             "Table":[
                 {
-                    "Name":"技能伤害",
+                    "Name":"Skill DMG",
                     "Values":{
                         "Lv1":"168% + 191.2%",
                         "Lv2":"180.6% + 205.54%",
@@ -19727,7 +19727,7 @@
                     }
                 },
                 {
-                    "Name":"减伤比例",
+                    "Name":"Damage Reduction Ratio",
                     "Values":{
                         "Lv1":"20%",
                         "Lv2":"21%",
@@ -19747,7 +19747,7 @@
                     }
                 },
                 {
-                    "Name":"持续时间",
+                    "Name":"Duration",
                     "Values":{
                         "Lv1":"15s",
                         "Lv2":"15s",
@@ -19767,7 +19767,7 @@
                     }
                 },
                 {
-                    "Name":"冷却时间",
+                    "Name":"CD",
                     "Values":{
                         "Lv1":"21s",
                         "Lv2":"21s",
@@ -19789,12 +19789,12 @@
             ]
         },
         "TalentQ":{
-            "Name":"古华剑·裁雨留虹",
+            "Name":"Guhua Sword: Raincutter",
             "Source":"https://genshin.honeyhunterworld.com/img/skills/s_253901.png",
-            "Description":"展开虹剑势，驾御幻影剑雨战斗，并生成最大数量的雨帘剑。\n虹剑势\n•\n当前场上自己的角色进行普通攻击时，会产生剑雨连携攻击，造成水元素伤害；\n•\n雨帘剑的数量将始终维持在最大数量。",
+            "Description":"Initiate\nRainbow\nBladework\nand\nfight\nusing\nan\nillusory\nsword\nrain,\nwhile\ncreating\nthe\nmaximum\nnumber\nof\nRain\nSwords.\nRainbow\nBladework\n•\nYour\nactive\ncharacter's\nNormal\nAttacks\nwill\ntrigger\nconsecutive\nsword\nrain\nattacks,\ndealing\nHydro\nDMG.\n•\nRain\nSwords\nwill\nremain\nat\nthe\nmaximum\nnumber\nthroughout\nthe\nability's\nduration.",
             "Table":[
                 {
-                    "Name":"剑雨伤害",
+                    "Name":"Sword Rain DMG",
                     "Values":{
                         "Lv1":"54.27%",
                         "Lv2":"58.34%",
@@ -19814,7 +19814,7 @@
                     }
                 },
                 {
-                    "Name":"持续时间",
+                    "Name":"Duration",
                     "Values":{
                         "Lv1":"15s",
                         "Lv2":"15s",
@@ -19834,7 +19834,7 @@
                     }
                 },
                 {
-                    "Name":"冷却时间",
+                    "Name":"CD",
                     "Values":{
                         "Lv1":"20s",
                         "Lv2":"20s",
@@ -19854,7 +19854,7 @@
                     }
                 },
                 {
-                    "Name":"元素能量",
+                    "Name":"Energy Cost",
                     "Values":{
                         "Lv1":"80",
                         "Lv2":"80",
@@ -19878,23 +19878,23 @@
         "PassiveTalents":[
             {
                 "Source":"https://genshin.honeyhunterworld.com/img/skills/p_252301.png",
-                "Name":"灵光乍现",
-                "Description":"合成角色天赋素材时，有25%概率返还部分合成材料。"
+                "Name":"Flash of Genius",
+                "Description":"When Xingqiu crafts Character Talent Materials, he has a 25% chance to refund a portion of the crafting materials used."
             },
             {
                 "Source":"https://genshin.honeyhunterworld.com/img/skills/p_252101.png",
-                "Name":"生水要诀",
-                "Description":"雨帘剑受击破碎时或持续时间结束时，基于行秋最大生命值的6%，恢复当前角色的生命值。"
+                "Name":"Hydropathic",
+                "Description":"When a Rain Sword is shattered or when its duration expires, it regenerates the current character's HP based on 6% of Xingqiu's Max HP."
             },
             {
                 "Source":"https://genshin.honeyhunterworld.com/img/skills/p_252201.png",
-                "Name":"虚实工笔",
-                "Description":"行秋获得20%水元素伤害加成。"
+                "Name":"Blades Amidst Raindrops",
+                "Description":"Xingqiu gains a 20% Hydro DMG Bonus."
             }
         ],
-        "Title":"少年春衫薄",
-        "AstrolabeName":"锦织座",
-        "Description":"经常能在书摊看到的少年人。手执长剑，胸中常怀侠义之心。",
+        "Title":"Juvenile Galant",
+        "AstrolabeName":"Fabulae Textile",
+        "Description":"A young man carrying a longsword who is frequently seen at book booths. He has a chivalrous heart and yearns for justice and fairness for all.",
         "Profile":"https://genshin.honeyhunterworld.com/img/cardicon/i_7018_party.png",
         "Source":"https://genshin.honeyhunterworld.com/img/char/xingqiu_face.png",
         "GachaCard":"https://genshin.honeyhunterworld.com/img/char/xingqiu_gacha_card.png",

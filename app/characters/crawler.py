@@ -2,7 +2,7 @@ import requests
 import re
 from bs4 import BeautifulSoup
 import json
-from characters.getCity import getCharacterCity, getTalentCity, getWeeklyItemName
+from app.characters.getCity import getCharacterCity, getTalentCity, getWeeklyItemName
 
 
 # 获取单个角色的数据并以字典的形式返回结果
@@ -632,9 +632,9 @@ def getAllCharacters(getBetaCharacters: False, timestampString):
                 allCharactersList.append(thisCharacterDict)
         newFileList = json.dumps(allCharactersList, ensure_ascii=False, indent=4, separators=(',', ':'))
         if getBetaCharacters:
-            newFileName = "characters/beta-characters-" + timestampString + ".json"
+            newFileName = "./data/beta-characters-" + timestampString + ".json"
         else:
-            newFileName = "characters/characters-" + timestampString + ".json"
+            newFileName = "./data/characters-" + timestampString + ".json"
         f_output = open(newFileName, mode="a", encoding='utf-8')
         f_output.write(newFileList)
         f_output.close()
