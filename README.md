@@ -12,6 +12,11 @@ General API designed for Snap.Genshin
 - 执行bash
 
 ```bash
-docker build -t='sg-api:1.0' .
+docker build -f Dockerfile -t sg-api/test .
+docker run -itp 3051:8080 \
+    --name=test-sg-api \
+    --mount type=bind,source="$(pwd)"/data,target=/code/data \
+    --mount type=bind,source="$(pwd)"/config,target=/code/config \
+    sg-api/test
 ```
 
