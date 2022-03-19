@@ -11,10 +11,24 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from app.characters import crawler
 
+
+# Application
+description = """
+Snap Genshin Web API
+
+## About us
+[Snap Genshin](https://www.snapgenshin.com/)
+
+"""
+app = FastAPI(
+    title="SnapGenshinWebAPI",
+    version="1.5",
+    redoc_url=None,
+    docs_url=None
+)
 # 全局变量
 cacheTime = 600
 charactersCacheTime = 7 * 24 * 60 * 60
-app = FastAPI()
 # 内存缓存 - 版本分发
 AllReleaseDict = {}
 GlobalStablePatch = {}
