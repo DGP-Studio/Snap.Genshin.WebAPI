@@ -1,3 +1,9 @@
 {
-    "key": "defaultKey"
+    "key": "defaultKey",
+    "mysql": {
+        "ip": "IPtoDB",
+        "userName": "YourUserName",
+        "password": "YourPW",
+        "dbName": "SG-WebAPI"
+    }
 }
