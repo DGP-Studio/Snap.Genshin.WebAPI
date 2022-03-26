@@ -5,5 +5,7 @@
         "userName": "YourUserName",
         "password": "YourPW",
         "dbName": "SG-WebAPI"
-    }
+    },
+    "accepted-plugin": ["DGP-Studio*SG.Plugin.Achievement.Exporter",
+                        "DGP-Studio*DGP.Genshin.GamebarWidget"]
 }
