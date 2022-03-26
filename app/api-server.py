@@ -6,11 +6,17 @@ import time
 import json
 import requests
 import hashlib
-from fastapi import FastAPI, Response, status, BackgroundTasks
+from fastapi import FastAPI, Response, status, BackgroundTasks, HTTPException
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from app.characters import crawler
+# from fastapi import Depends, FastAPI, HTTPException
+# from sqlalchemy.orm import Session
 
+# from . import crud, models, schemas
+# from .database import SessionLocal, engine
+
+# models.Base.metadata.create_all(bind=engine)
 
 # Application
 description = """
@@ -24,10 +30,11 @@ app = FastAPI(
     title="SnapGenshinWebAPI",
     version="1.5",
     redoc_url=None,
-    docs_url=None
+    #docs_url=None
 )
+
 # 全局变量
-cacheTime = 600
+cacheTime = 180
 charactersCacheTime = 7 * 24 * 60 * 60
 # 内存缓存 - 版本分发
 AllReleaseDict = {}
@@ -41,6 +48,13 @@ LastPendingCharactersCacheTimestamp = ""
 CharactersDict = ""
 # 内存缓存 - 公告
 manifestoCache = ""
+# 全局变量 - 插件库
+with open("./config/config.json", 'r', encoding='utf-8') as setting_json:
+    ACCEPT_PLUGINS = json.load(setting_json)['accepted-plugin']
+# 内存缓存
+PluginVersionCache = {}
+for plugin in ACCEPT_PLUGINS:
+    PluginVersionCache[plugin] = ""
 
 
 class EncryptedPost(BaseModel):
@@ -360,3 +374,32 @@ def getLatestCharacters(action: str, background_tasks: BackgroundTasks):
             "result": "failed",
             "data": ""
         }
+
+
+@app.get("/plugin/update/{PluginName}", status_code=200)
+def getPluginVersion(PluginName: str):
+    # global cacheTime, PluginVersionCache, ACCEPT_PLUGINS
+    refreshTask = False
+
+    if PluginName not in ACCEPT_PLUGINS:
+        raise HTTPException(status_code=404, detail="Not a valid plugin")
+
+    if PluginVersionCache[PluginName] != "":
+        lastCacheTimestamp = int(PluginVersionCache[PluginName]["cache_timestamp"])
+        if int(time.time()) - lastCacheTimestamp >= cacheTime:
+            refreshTask = True
+    else:
+        refreshTask = True
+
+    if refreshTask:
+        apiUrl = "https://api.github.com/repos/%s/releases/latest" % (PluginName.replace("*", "/"))
+        githubAPIResult = json.loads(requests.get(apiUrl).text)
+        NewCache = {
+            "tag_name": githubAPIResult["tag_name"],
+            "cache_timestamp": str(int(time.time())),
+            "url": githubAPIResult["assets"][0]["browser_download_url"]
+        }
+        PluginVersionCache[PluginName] = NewCache
+        return NewCache
+    else:
+        return PluginVersionCache[PluginName]
