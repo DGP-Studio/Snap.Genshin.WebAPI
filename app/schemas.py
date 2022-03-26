@@ -17,6 +17,7 @@ class PluginPatchCreate(PatchBase):
 
 
 class PluginBase(BaseModel):
+    ID: int
     Name: str
     Repo: str
 
@@ -27,7 +28,8 @@ class PluginCreate(PluginBase):
 
 class Plugin(PluginBase):
     ID: int
-    Patches: list[PatchBase]
+    Name: str
+    Repo: str
 
     class Config:
         orm_mode = True

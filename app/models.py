@@ -9,7 +9,7 @@ class Plugin(Base):
 
     ID = Column(Integer, primary_key=True, index=True)
     Name = Column(String, index=True)
-    RepoURL = Column(String, index=True)
+    Repo = Column(String, index=True)
     # Patches = relationship("PluginPatch", back_populates="PatchID")
 
 
