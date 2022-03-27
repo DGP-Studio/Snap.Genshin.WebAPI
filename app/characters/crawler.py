@@ -632,9 +632,9 @@ def getAllCharacters(getBetaCharacters: False, timestampString):
                 allCharactersList.append(thisCharacterDict)
         newFileList = json.dumps(allCharactersList, ensure_ascii=False, indent=4, separators=(',', ':'))
         if getBetaCharacters:
-            newFileName = "./data/beta-characters-" + timestampString + ".json"
+            newFileName = "./data/od21/Metadata/beta-characters-" + timestampString + ".json"
         else:
-            newFileName = "./data/characters-" + timestampString + ".json"
+            newFileName = "./data/od21/Metadata/characters-" + timestampString + ".json"
         f_output = open(newFileName, mode="a", encoding='utf-8')
         f_output.write(newFileList)
         f_output.close()
