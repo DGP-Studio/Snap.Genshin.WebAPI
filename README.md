@@ -1,6 +1,8 @@
 # Snap.Genshin.WebAPI
 General API designed for Snap.Genshin
 
+**Snap Genshin API服务器后端当前需要更多开发者，如果你有Python编程经验并熟悉SQL，欢迎加入开发群**
+
 ## 测试API
 
 - 在本地直接运行`run.bat`
