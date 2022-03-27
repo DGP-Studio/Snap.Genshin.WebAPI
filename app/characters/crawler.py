@@ -453,6 +453,7 @@ def getItemName(itemURL):
 
 # 从内鬼网获取全部角色
 def getAllCharacters(getBetaCharacters: False, timestampString):
+    print("Starting a crawler task at the background...")
     try:
         if not getBetaCharacters:
             url = "https://genshin.honeyhunterworld.com/db/char/characters/?lang=CHS"
@@ -641,4 +642,5 @@ def getAllCharacters(getBetaCharacters: False, timestampString):
         print("Successfully write new characters.json")
         return True
     except Exception as e:
+        print(e)
         return e
