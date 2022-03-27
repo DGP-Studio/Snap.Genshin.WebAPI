@@ -272,6 +272,9 @@ def getLatestCharacters(action: str, background_tasks: BackgroundTasks, response
     if action in acceptedActions:
         currentTimestamp = int(time.time())
         if currentTimestamp - LastCharactersVersionCheckTime > 600:
+            #print("currentTimestamp: " + str(currentTimestamp))
+            #print("LastCharactersVersionCheckTime: " + str(LastCharactersVersionCheckTime))
+            LastCharactersVersionCheckTime = currentTimestamp
             files = os.listdir("./data/od21/Metadata/")
             latestTimestamp = 0
             for file in files:
