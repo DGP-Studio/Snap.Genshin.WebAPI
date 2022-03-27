@@ -28,7 +28,7 @@ Snap Genshin Web API
 """
 app = FastAPI(
     title="SnapGenshinWebAPI",
-    version="1.5",
+    version="1.7",
     redoc_url=None,
     #docs_url=None
 )
@@ -43,9 +43,10 @@ CNStablePatch = {}
 LatestRelease = ""
 LastPatchCacheTimestamp = ""
 # 内存缓存 - 角色JSON
-LastCharactersCacheTimestamp = ""
-LastPendingCharactersCacheTimestamp = ""
-CharactersDict = ""
+LastCharactersVersionCheckTime = 0
+LastCharactersVersionMakeTime = 0
+LatestCharactersVersion = ""
+# CharactersDict = ""
 # 内存缓存 - 公告
 manifestoCache = ""
 # 全局变量 - 插件库
@@ -248,132 +249,53 @@ def refreshCharacterMeta(background_tasks: BackgroundTasks, userSentData: Encryp
     """
     :return: result: 'OK' if new task generated, 'pending' if a previous task is ongoing
     """
-    global LastPendingCharactersCacheTimestamp, LastCharactersCacheTimestamp, CharactersDict
+    global LastCharactersVersionMakeTime
     userSentData = userSentData.dict()
     if verifyKey(userSentData['key'], userSentData['parameter']):
-        # 判断当前是否有挂起的刷新任务
-        if LastPendingCharactersCacheTimestamp != "":
-            expectedFileName = "./data/characters-" + LastPendingCharactersCacheTimestamp + ".json"
-            previousTaskFinished = os.path.exists(expectedFileName)
-            if previousTaskFinished:
-                # 上一次任务已完成，新缓存已生成
-                # 复制时间戳到最新版本，重置挂起任务记录
-                LastCharactersCacheTimestamp = LastPendingCharactersCacheTimestamp[:]
-                LastPendingCharactersCacheTimestamp = ""
-                # 将新的JSON文件写入内存
-                f = open(expectedFileName, encoding='utf-8')
-                text = f.read()
-                f.close()
-                CharactersDict = text
-                # 开始新的刷新任务
-                currentTimestamp = str(int(time.time()))
-                background_tasks.add_task(crawler.getAllCharacters, False, currentTimestamp)
-                LastPendingCharactersCacheTimestamp = currentTimestamp
-                return {
-                    "result": "OK",
-                    "message": "A new characters JSON cache is generating at the background",
-                    "timestamp": currentTimestamp
-                }
-            else:
-                # 已有任务但未完成
-                return {
-                    "result": "pending",
-                    "message": "The previous refresh task is still ongoing",
-                    "timestamp": LastPendingCharactersCacheTimestamp
-                }
+        currentTimestamp = int(time.time())
+        if currentTimestamp - LastCharactersVersionMakeTime < 600:
+            return {"result": "skipped"}
         else:
-            currentTimestamp = str(int(time.time()))
-            background_tasks.add_task(crawler.getAllCharacters, False, currentTimestamp)
-            LastPendingCharactersCacheTimestamp = currentTimestamp
-            return {
-                "result": "OK",
-                "message": "A new characters JSON cache is generating at the background",
-                "timestamp": currentTimestamp
-            }
+            background_tasks.add_task(crawler.getAllCharacters, False, str(currentTimestamp))
+            LastCharactersVersionMakeTime = currentTimestamp
+            return {"result": "OK"}
     else:
         response.status_code = status.HTTP_403_FORBIDDEN
         return {'result': 'failed'}
 
 
-@app.get("/characters/{action}")
-def getLatestCharacters(action: str, background_tasks: BackgroundTasks):
-    global LastPendingCharactersCacheTimestamp, LastCharactersCacheTimestamp, CharactersDict
+@app.get("/characters/{action}", status_code=200)
+def getLatestCharacters(action: str, background_tasks: BackgroundTasks, response: Response):
+    global LastCharactersVersionCheckTime, LatestCharactersVersion, LastCharactersVersionMakeTime
     # If there is memory cache, return it
-    acceptedActions = ["version", "live"]
+    acceptedActions = ["live"]
     if action in acceptedActions:
-        if CharactersDict != "" and LastCharactersCacheTimestamp != "":
-            print("access from memory cache")
-            pass
-        else:
-            # If there is a pending timestamp, check task status
-            if LastPendingCharactersCacheTimestamp != "":
-                expectedFileName = "./data/characters-" + LastPendingCharactersCacheTimestamp + ".json"
-                previousTaskFinished = os.path.exists(expectedFileName)
-                # Task finished
-                if previousTaskFinished:
-                    # take pending timestamp to cached timestamp
-                    LastCharactersCacheTimestamp = LastPendingCharactersCacheTimestamp[:]
-                    LastPendingCharactersCacheTimestamp = ""
-                    # 将新的JSON文件写入内存
-                    f = open(expectedFileName, encoding='utf-8')
-                    text = f.read()
-                    f.close()
-                    CharactersDict = text
-            elif LastCharactersCacheTimestamp != "":
-                expectedFileName = "./data/characters-" + LastCharactersCacheTimestamp + ".json"
-                f = open(expectedFileName, encoding='utf-8')
-                text = f.read()
-                f.close()
-                CharactersDict = text
+        currentTimestamp = int(time.time())
+        if currentTimestamp - LastCharactersVersionCheckTime > 600:
+            files = os.listdir("./data/od21/Metadata/")
+            latestTimestamp = 0
+            for file in files:
+                timestamp = re.search("(-)(\d)+", file)
+                if timestamp is not None:
+                    timestamp = timestamp[0].replace("-", "")
+                    if int(timestamp) > latestTimestamp:
+                        latestTimestamp = int(timestamp)
+            if latestTimestamp != 0:
+                # 将IO结果中最新的缓存写入内存
+                print("has assigned timestamp " + str(latestTimestamp) + " to cache")
+                LatestCharactersVersion = str(latestTimestamp)
+                return {"result": "OK", "message": "new IO cache returned", "timestamp": LatestCharactersVersion}
             else:
-                # 没有任何可能的内存缓存
-                # 检查是否有文件IO缓存
-                files = os.listdir("./data/")
-                latestTimestamp = 0
-                for file in files:
-                    timestamp = re.search("(-)(\d)+", file)
-                    if timestamp is not None:
-                        timestamp = timestamp[0].replace("-", "")
-                        if int(timestamp) > latestTimestamp:
-                            latestTimestamp = int(timestamp)
-                if latestTimestamp != 0:
-                    print("has assigned timestamp " + str(latestTimestamp) + " to cache")
-                    LastCharactersCacheTimestamp = str(latestTimestamp)
-                    expectedFileName = "./data/characters-" + LastCharactersCacheTimestamp + ".json"
-                    f = open(expectedFileName, encoding='utf-8')
-                    text = f.read()
-                    f.close()
-                    CharactersDict = text
-                else:
-                    currentTimestamp = str(int(time.time()))
-                    background_tasks.add_task(crawler.getAllCharacters, False, currentTimestamp)
-                    LastPendingCharactersCacheTimestamp = currentTimestamp
-                    return {
-                        "action": action,
-                        "code": "903",
-                        "timestamp": "",
-                        "result": ""
-                    }
-        if action == "live":
-            return {
-                "action": "live",
-                "code": "901",
-                "timestamp": LastCharactersCacheTimestamp,
-                "result": CharactersDict
-            }
+                # 无任何缓存的极端情况
+                background_tasks.add_task(crawler.getAllCharacters, False, str(currentTimestamp))
+                LastCharactersVersionMakeTime = currentTimestamp
+                return {"result": "failed", "message": "Making new cache", "timestamp": str(currentTimestamp)}
         else:
-            return {
-                "action": "version",
-                "code": "902",
-                "timestamp": LastCharactersCacheTimestamp
-            }
+            return {"result": "OK", "message": "memory cache returned", "timestamp": LatestCharactersVersion}
     else:
         # 调用了错误的方法
-        return {
-            "action": action,
-            "result": "failed",
-            "data": ""
-        }
+        response.status_code = status.HTTP_403_FORBIDDEN
+        return {"result": "failed", "message": action + " not allowed remotely"}
 
 
 @app.get("/plugin/update/{PluginName}", status_code=200)
