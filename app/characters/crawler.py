@@ -638,6 +638,7 @@ def getAllCharacters(getBetaCharacters: False, timestampString):
         f_output = open(newFileName, mode="a", encoding='utf-8')
         f_output.write(newFileList)
         f_output.close()
+        print("Successfully write new characters.json")
         return True
     except Exception as e:
         return e
