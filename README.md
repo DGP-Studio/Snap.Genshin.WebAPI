@@ -14,7 +14,9 @@ General API designed for Snap.Genshin
 - 执行bash
 
 ```bash
+fusermount --u /data/wwwroot/api.snapgenshin.com/data/od21/
 docker build -f Dockerfile -t sg-api/test .
+rclone mount od21:snapgenshin/ /data/wwwroot/api.snapgenshin.com/data/od21/ --daemon
 docker run -itp 3051:8080 \
     --name=test-sg-api \
     --mount type=bind,source="$(pwd)"/data,target=/code/data \
