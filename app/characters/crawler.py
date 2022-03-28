@@ -632,6 +632,29 @@ def getAllCharacters(getBetaCharacters: False, timestampString):
 
                 allCharactersList.append(thisCharacterDict)
         newFileList = json.dumps(allCharactersList, ensure_ascii=False, indent=4, separators=(',', ':'))
+
+        # Fix Yanfei Error
+        for character in newFileList:
+            if character['Key'] == "feiyan":
+                stat = character["TalentQ"]["Table"]
+                # print(stat)
+                """
+                内鬼网的原始顺序
+                stat[0]: 技能伤害 --> 不变
+                stat[1]: 丹火印赋予间隔 --> Values 更改为 stat[2]['Values']
+                stat[2]: 重击伤害提升 --> Values 更改为 stat[3]['Values']
+                stat[3]: 持续时间  --> Values 更改为 stat[4]['Values']
+                stat[4]: 冷却时间  --> Values 更改为 stat[5]['Values']
+                stat[5]: 元素能量  --> Values 全部改为 80
+                """
+                character["TalentQ"]["Table"][1]['Values'] = stat[2]['Values'].copy()
+                character["TalentQ"]["Table"][2]['Values'] = stat[3]['Values'].copy()
+                character["TalentQ"]["Table"][3]['Values'] = stat[4]['Values'].copy()
+                character["TalentQ"]["Table"][4]['Values'] = stat[5]['Values'].copy()
+                for key in character["TalentQ"]["Table"][5]['Values']:
+                    character["TalentQ"]["Table"][5]['Values'][key] = "80"
+        # Fix Yanfei Error
+
         if getBetaCharacters:
             newFileName = "./data/od21/Metadata/beta-characters-" + timestampString + ".json"
         else:
