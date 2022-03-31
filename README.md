@@ -14,13 +14,18 @@ General API designed for Snap.Genshin
 - 执行bash
 
 ```bash
+cd /data/wwwroot/api.snapgenshin.com
+rm -rf backup/*
+mv * backup/
 fusermount --u /data/wwwroot/api.snapgenshin.com/data/od21/
-docker build -f Dockerfile -t sg-api/test .
-rclone mount od21:snapgenshin/ /data/wwwroot/api.snapgenshin.com/data/od21/ --daemon
+docker build -f Dockerfile -t sg-api/1.7 .
 docker run -itp 3051:8080 \
-    --name=test-sg-api \
+    --name=SG-API-1.7 \
     --mount type=bind,source="$(pwd)"/data,target=/code/data \
     --mount type=bind,source="$(pwd)"/config,target=/code/config \
-    sg-api/test
+    sg-api/1.7
+cp backup/data/* data/
+rclone mount od21:snapgenshin/ /data/wwwroot/api.snapgenshin.com/data/od21/ --daemon
+docker restart SG-API-1.7
 ```
 
