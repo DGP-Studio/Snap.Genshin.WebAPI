@@ -15,9 +15,12 @@ General API designed for Snap.Genshin
 
 ```bash
 cd /data/wwwroot/api.snapgenshin.com
-rm -rf backup/*
-mv * backup/
 fusermount --u /data/wwwroot/api.snapgenshin.com/data/od21/
+rm -rf backup/*
+mv -f * backup/
+git clone https://github.com/DGP-Studio/Snap.Genshin.WebAPI
+mv Snap.Genshin.WebAPI/* .
+rm -rf Snap.Genshin.WebAPI
 docker build -f Dockerfile -t sg-api/1.7 .
 docker run -itp 3051:8080 \
     --name=SG-API-1.7 \
@@ -25,6 +28,7 @@ docker run -itp 3051:8080 \
     --mount type=bind,source="$(pwd)"/config,target=/code/config \
     sg-api/1.7
 cp backup/data/* data/
+mkdir data/od21
 rclone mount od21:snapgenshin/ /data/wwwroot/api.snapgenshin.com/data/od21/ --daemon
 docker restart SG-API-1.7
 ```
