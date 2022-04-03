@@ -656,7 +656,7 @@ def getAllCharacters(getBetaCharacters: False, timestampString):
         # Fix Yanfei Error
 
         if getBetaCharacters:
-            newFileName = "./data/od21/Metadata/beta-characters-" + timestampString + ".json"
+            newFileName = "./data/od21/Metadata/characters-beta-" + timestampString + ".json"
         else:
             newFileName = "./data/od21/Metadata/characters-" + timestampString + ".json"
         f_output = open(newFileName, mode="a", encoding='utf-8')
@@ -666,4 +666,4 @@ def getAllCharacters(getBetaCharacters: False, timestampString):
         return True
     except Exception as e:
         print(e)
-        return e
+        return False
