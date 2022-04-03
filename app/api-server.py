@@ -24,6 +24,7 @@ Snap Genshin Web API
 
 ## About us
 [Snap Genshin](https://www.snapgenshin.com/)
+
 About this API: [https://github.com/DGP-Studio/Snap.Genshin.WebAPI](https://github.com/DGP-Studio/Snap.Genshin.WebAPI)
 
 
@@ -31,7 +32,7 @@ About this API: [https://github.com/DGP-Studio/Snap.Genshin.WebAPI](https://gith
 app = FastAPI(
     title="SnapGenshinWebAPI",
     description=description,
-    version="1.8",
+    version="1.8.1",
     redoc_url=None,
     #docs_url=None,
     terms_of_service="https://www.snapgenshin.com/documents/statement/user-privacy-notice.html",
@@ -278,7 +279,7 @@ def refreshCharacterMeta(background_tasks: BackgroundTasks, userSentData: Encryp
 
 # 获取角色信息
 @app.get("/characters/live", status_code=200)
-def getLatestCharacters(action: str, background_tasks: BackgroundTasks, response: Response):
+def getLatestCharacters(background_tasks: BackgroundTasks):
     global LastCharactersVersionCheckTime, LatestCharactersVersion, LastCharactersVersionMakeTime
     # If there is memory cache, return it
     currentTimestamp = int(time.time())
@@ -331,7 +332,7 @@ def refreshCharacterMeta(background_tasks: BackgroundTasks, userSentData: Encryp
 
 # 获取测试角色信息
 @app.get("/characters/beta", status_code=200)
-def getLatestCharacters(action: str, background_tasks: BackgroundTasks, response: Response):
+def getLatestCharacters(background_tasks: BackgroundTasks):
     global LastBetaCharactersVersionCheckTime, LatestBetaCharactersVersion, LastBetaCharactersVersionMakeTime
     # If there is memory cache, return it
     currentTimestamp = int(time.time())
