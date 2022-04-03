@@ -451,186 +451,202 @@ def getItemName(itemURL):
     return title
 
 
+def dealCharacterList(clist: list, isBeta, timeStampMaking):
+    rootURL = "https://genshin.honeyhunterworld.com"
+    this_character_page_list = []
+    for character in clist:
+        # character = character_list[0]
+        # if 1 == 1:
+        thisCharacterDict = {}
+        character_link = rootURL + character.a['href']
+        # print(character_link)
+        KeyName = re.search("(char\/)(\w)+", character_link)[0].replace("char/", "")
+        # print("Key: " + KeyName)
+        CharacterCity = getCharacterCity(KeyName)
+        # print("City: " + CharacterCity)
+        Name = character.find("span", {"class": "sea_charname"}).text
+        print("Name: " + Name)
+        if "旅行者" in Name:
+            print("Skip Traveler's page")
+        else:
+            Element = rootURL + character.find("img", {"class": "char_portrait_card_sea_element"})["data-src"]
+            # print("Element: " + Element)
+            CharacterStarCount = len(character.findAll("svg", {"class": "sea_char_stars"}))
+            if CharacterStarCount == 4:
+                CharacterRarity = "https://genshin.honeyhunterworld.com/img/back/item/4star.png"
+            elif CharacterStarCount == 5:
+                CharacterRarity = "https://genshin.honeyhunterworld.com/img/back/item/5star.png"
+            else:
+                CharacterRarity = "Error"
+            # print("CharacterRarity: " + CharacterRarity)
+
+            # Required Materials 升级所需材料
+            Materials = character.find("div", {"class": "sea_char_mat_cont"})
+            Materials = Materials.findAll("a")
+            # Talent 天赋书
+            TalentStars = Materials[0].find("div")['data-bg']
+            TalentStarsPic = rootURL + re.search("(/img)(.)+(png)", TalentStars)[0]
+            # print(TalentStarsPic)
+            TalentPic = rootURL + Materials[0].find("div").find("img", {"class": "lazy"})["data-src"].replace("_35",
+                                                                                                              "")
+            # print(TalentPic)
+            TalentURL = "https://genshin.honeyhunterworld.com/db/item/" + re.search("(i_)(\d)*", TalentPic)[
+                0] + "/?lang=CHS"
+            # print(TalentURL)
+            Talent = getItemName(TalentURL).replace("」的哲学", "").replace("「", "")
+            # print(Talent)
+            TalentCity = getTalentCity(Talent)
+            # print("Talent City: " + TalentCity)
+            TalentJson = {
+                "City": TalentCity,
+                "Name": Talent,
+                "Star": TalentStarsPic,
+                "Source": TalentPic
+            }
+            # BOSS Drop
+            BOSS_DropStars = Materials[1].find("div")['data-bg']
+            BOSS_DropStarsPic = rootURL + re.search("(/img)(.)+(png)", BOSS_DropStars)[0]
+            # print(BOSS_DropStarsPic)
+            BOSS_DropPic = rootURL + Materials[1].find("div").find("img", {"class": "lazy"})["data-src"].replace(
+                "_35",
+                "")
+            # print(BOSS_DropPic)
+            BOSS_DropURL = "https://genshin.honeyhunterworld.com/db/item/" + re.search("(i_)(\d)*", BOSS_DropPic)[
+                0] + "/?lang=CHS"
+            BOSS_DropName = getItemName(BOSS_DropURL)
+            # print(BOSS_DropName)
+            BOSS_Json = {
+                "Name": BOSS_DropName,
+                "Star": BOSS_DropStarsPic,
+                "Source": BOSS_DropPic
+            }
+            # GemStone
+            GenStoneStars = Materials[2].find("div")['data-bg']
+            GenStoneStarsPic = rootURL + re.search("(/img)(.)+(png)", GenStoneStars)[0]
+            # print(GenStoneStarsPic)
+            GenStonePic = rootURL + Materials[2].find("div").find("img", {"class": "lazy"})["data-src"]
+            # print(GenStonePic)
+            GenStonePic = GenStonePic.replace("_35.png", ".png")
+            # print(GenStonePic)
+            GenStoneURL = "https://genshin.honeyhunterworld.com/db/item/" + re.search("(i_)(\d)+", GenStonePic)[
+                0] + "/?lang=CHS"
+            GenStoneName = getItemName(GenStoneURL)
+            # print(GenStoneName)
+            GemStoneJSON = {
+                "Name": GenStoneName,
+                "Star": GenStoneStarsPic,
+                "Source": GenStonePic
+            }
+            # Local
+            LocalStars = Materials[3].find("div")['data-bg']
+            LocalStarsPic = rootURL + re.search("(/img)(.)+(png)", LocalStars)[0]
+            # print(LocalStarsPic)
+            LocalPic = rootURL + Materials[3].find("div").find("img", {"class": "lazy"})["data-src"].replace("_35",
+                                                                                                             "")
+            # print(LocalPic)
+            LocalURL = "https://genshin.honeyhunterworld.com/db/item/" + re.search("(i_)(\d)*", LocalPic)[
+                0] + "/?lang=CHS"
+            LocalName = getItemName(LocalURL)
+            # print(LocalName)
+            LocalJSON = {
+                "Name": LocalName,
+                "Star": LocalStarsPic,
+                "Source": LocalPic
+            }
+            # Monster
+            MonsterStars = Materials[4].find("div")['data-bg']
+            MonsterStarsPic = rootURL + re.search("(/img)(.)+(png)", MonsterStars)[0]
+            # print(MonsterStarsPic)
+            MonsterPic = rootURL + Materials[4].find("div").find("img", {"class": "lazy"})["data-src"].replace(
+                "_35",
+                "")
+            # print(MonsterPic)
+            MonsterURL = "https://genshin.honeyhunterworld.com/db/item/" + re.search("(i_)(\d)*", MonsterPic)[
+                0] + "/?lang=CHS"
+            MonsterName = getItemName(MonsterURL)
+            # print(MonsterName)
+            MonsterJSON = {
+                "Name": MonsterName,
+                "Star": MonsterStarsPic,
+                "Source": MonsterPic
+            }
+            # Weekly
+            WeeklyStars = Materials[5].find("div")['data-bg']
+            WeeklyStarsPic = rootURL + re.search("(/img)(.)+(png)", WeeklyStars)[0]
+            # print(WeeklyStarsPic)
+            WeeklyPic = rootURL + Materials[5].find("div").find("img", {"class": "lazy"})["data-src"].replace("_35",
+                                                                                                              "")
+            # print(WeeklyPic)
+            WeeklyURL = "https://genshin.honeyhunterworld.com/db/item/" + re.search("(i_)(\d)*", WeeklyPic)[
+                0] + "/?lang=CHS"
+            WeeklyName = getItemName(WeeklyURL)
+            # print(WeeklyName)
+            WeeklyCity = getWeeklyItemName(WeeklyName)
+            # print("Weekly Item City: " + WeeklyCity)
+            WeeklyJSON = {
+                "City": WeeklyCity,
+                "Name": WeeklyName,
+                "Star": WeeklyStarsPic,
+                "Source": WeeklyPic
+            }
+
+            # 加载角色主页面
+            characterInfo = getCharInfo("https://genshin.honeyhunterworld.com/db/char/" + KeyName + "/?lang=CHS")
+
+            # 写入该角色数据
+            if isBeta:
+                thisCharacterDict["beta"] = True
+            else:
+                thisCharacterDict["beta"] = False
+            thisCharacterDict["timestamp"] = timeStampMaking
+            thisCharacterDict["Element"] = Element
+            thisCharacterDict["Key"] = KeyName
+            thisCharacterDict["City"] = CharacterCity
+            thisCharacterDict["Star"] = CharacterRarity
+            thisCharacterDict["Name"] = Name
+            thisCharacterDict["Talent"] = TalentJson
+            thisCharacterDict["Boss"] = BOSS_Json
+            thisCharacterDict["GemStone"] = GemStoneJSON
+            thisCharacterDict["Local"] = LocalJSON
+            thisCharacterDict["Monster"] = MonsterJSON
+            thisCharacterDict["Weekly"] = WeeklyJSON
+            thisCharacterDict["CharStat"] = characterInfo[0]
+            thisCharacterDict["Constellation"] = characterInfo[1]
+            thisCharacterDict["NormalAttack"] = characterInfo[2]
+            thisCharacterDict["TalentE"] = characterInfo[3]
+            thisCharacterDict["TalentQ"] = characterInfo[4]
+            thisCharacterDict["PassiveTalents"] = characterInfo[5]
+            thisCharacterDict["Title"] = characterInfo[6]
+            thisCharacterDict["AstrolabeName"] = characterInfo[7]
+            thisCharacterDict["Description"] = characterInfo[8]
+            thisCharacterDict["Profile"] = characterInfo[9]
+            thisCharacterDict["Source"] = characterInfo[10]
+            thisCharacterDict["GachaCard"] = characterInfo[11]
+            thisCharacterDict["GachaSplash"] = characterInfo[12]
+
+            this_character_page_list.append(thisCharacterDict)
+    return this_character_page_list
+
+
 # 从内鬼网获取全部角色
-def getAllCharacters(getBetaCharacters: False, timestampString):
+def getAllCharacters(timestampString):
     print("Starting a crawler task at the background...")
     try:
-        if not getBetaCharacters:
-            url = "https://genshin.honeyhunterworld.com/db/char/characters/?lang=CHS"
-        else:
-            url = "https://genshin.honeyhunterworld.com/db/char/unreleased-and-upcoming-characters/?lang=CHS"
-        rootURL = "https://genshin.honeyhunterworld.com"
+        url = "https://genshin.honeyhunterworld.com/db/char/characters/?lang=CHS"
+
         r = requests.get(url)
         soup = BeautifulSoup(r.text, 'lxml')
         character_list = soup.find_all('div', {'class': 'char_sea_cont'})
         allCharactersList = []
         print("找到了" + str(len(character_list)) + "个角色")
-        for character in character_list:
-        # character = character_list[0]
-        # if 1 == 1:
-            thisCharacterDict = {}
-            character_link = rootURL + character.a['href']
-            # print(character_link)
-            KeyName = re.search("(char\/)(\w)+", character_link)[0].replace("char/", "")
-            # print("Key: " + KeyName)
-            CharacterCity = getCharacterCity(KeyName)
-            # print("City: " + CharacterCity)
-            Name = character.find("span", {"class": "sea_charname"}).text
-            print("Name: " + Name)
-            if "旅行者" in Name:
-                print("Skip Traveler's page")
-            else:
-                Element = rootURL + character.find("img", {"class": "char_portrait_card_sea_element"})["data-src"]
-                # print("Element: " + Element)
-                CharacterStarCount = len(character.findAll("svg", {"class": "sea_char_stars"}))
-                if CharacterStarCount == 4:
-                    CharacterRarity = "https://genshin.honeyhunterworld.com/img/back/item/4star.png"
-                elif CharacterStarCount == 5:
-                    CharacterRarity = "https://genshin.honeyhunterworld.com/img/back/item/5star.png"
-                else:
-                    CharacterRarity = "Error"
-                # print("CharacterRarity: " + CharacterRarity)
+        live_characters_list = dealCharacterList(character_list, False, timestampString)
 
-                # Required Materials 升级所需材料
-                Materials = character.find("div", {"class": "sea_char_mat_cont"})
-                Materials = Materials.findAll("a")
-                # Talent 天赋书
-                TalentStars = Materials[0].find("div")['data-bg']
-                TalentStarsPic = rootURL + re.search("(/img)(.)+(png)", TalentStars)[0]
-                # print(TalentStarsPic)
-                TalentPic = rootURL + Materials[0].find("div").find("img", {"class": "lazy"})["data-src"].replace("_35",
-                                                                                                                  "")
-                # print(TalentPic)
-                TalentURL = "https://genshin.honeyhunterworld.com/db/item/" + re.search("(i_)(\d)*", TalentPic)[
-                    0] + "/?lang=CHS"
-                # print(TalentURL)
-                Talent = getItemName(TalentURL).replace("」的哲学", "").replace("「", "")
-                # print(Talent)
-                TalentCity = getTalentCity(Talent)
-                # print("Talent City: " + TalentCity)
-                TalentJson = {
-                    "City": TalentCity,
-                    "Name": Talent,
-                    "Star": TalentStarsPic,
-                    "Source": TalentPic
-                }
-                # BOSS Drop
-                BOSS_DropStars = Materials[1].find("div")['data-bg']
-                BOSS_DropStarsPic = rootURL + re.search("(/img)(.)+(png)", BOSS_DropStars)[0]
-                # print(BOSS_DropStarsPic)
-                BOSS_DropPic = rootURL + Materials[1].find("div").find("img", {"class": "lazy"})["data-src"].replace(
-                    "_35",
-                    "")
-                # print(BOSS_DropPic)
-                BOSS_DropURL = "https://genshin.honeyhunterworld.com/db/item/" + re.search("(i_)(\d)*", BOSS_DropPic)[
-                    0] + "/?lang=CHS"
-                BOSS_DropName = getItemName(BOSS_DropURL)
-                # print(BOSS_DropName)
-                BOSS_Json = {
-                    "Name": BOSS_DropName,
-                    "Star": BOSS_DropStarsPic,
-                    "Source": BOSS_DropPic
-                }
-                # GemStone
-                GenStoneStars = Materials[2].find("div")['data-bg']
-                GenStoneStarsPic = rootURL + re.search("(/img)(.)+(png)", GenStoneStars)[0]
-                # print(GenStoneStarsPic)
-                GenStonePic = rootURL + Materials[2].find("div").find("img", {"class": "lazy"})["data-src"]
-                # print(GenStonePic)
-                GenStonePic = GenStonePic.replace("_35.png", ".png")
-                # print(GenStonePic)
-                GenStoneURL = "https://genshin.honeyhunterworld.com/db/item/" + re.search("(i_)(\d)+", GenStonePic)[
-                    0] + "/?lang=CHS"
-                GenStoneName = getItemName(GenStoneURL)
-                # print(GenStoneName)
-                GemStoneJSON = {
-                    "Name": GenStoneName,
-                    "Star": GenStoneStarsPic,
-                    "Source": GenStonePic
-                }
-                # Local
-                LocalStars = Materials[3].find("div")['data-bg']
-                LocalStarsPic = rootURL + re.search("(/img)(.)+(png)", LocalStars)[0]
-                # print(LocalStarsPic)
-                LocalPic = rootURL + Materials[3].find("div").find("img", {"class": "lazy"})["data-src"].replace("_35",
-                                                                                                                 "")
-                # print(LocalPic)
-                LocalURL = "https://genshin.honeyhunterworld.com/db/item/" + re.search("(i_)(\d)*", LocalPic)[
-                    0] + "/?lang=CHS"
-                LocalName = getItemName(LocalURL)
-                # print(LocalName)
-                LocalJSON = {
-                    "Name": LocalName,
-                    "Star": LocalStarsPic,
-                    "Source": LocalPic
-                }
-                # Monster
-                MonsterStars = Materials[4].find("div")['data-bg']
-                MonsterStarsPic = rootURL + re.search("(/img)(.)+(png)", MonsterStars)[0]
-                # print(MonsterStarsPic)
-                MonsterPic = rootURL + Materials[4].find("div").find("img", {"class": "lazy"})["data-src"].replace(
-                    "_35",
-                    "")
-                # print(MonsterPic)
-                MonsterURL = "https://genshin.honeyhunterworld.com/db/item/" + re.search("(i_)(\d)*", MonsterPic)[
-                    0] + "/?lang=CHS"
-                MonsterName = getItemName(MonsterURL)
-                # print(MonsterName)
-                MonsterJSON = {
-                    "Name": MonsterName,
-                    "Star": MonsterStarsPic,
-                    "Source": MonsterPic
-                }
-                # Weekly
-                WeeklyStars = Materials[5].find("div")['data-bg']
-                WeeklyStarsPic = rootURL + re.search("(/img)(.)+(png)", WeeklyStars)[0]
-                # print(WeeklyStarsPic)
-                WeeklyPic = rootURL + Materials[5].find("div").find("img", {"class": "lazy"})["data-src"].replace("_35",
-                                                                                                                  "")
-                # print(WeeklyPic)
-                WeeklyURL = "https://genshin.honeyhunterworld.com/db/item/" + re.search("(i_)(\d)*", WeeklyPic)[
-                    0] + "/?lang=CHS"
-                WeeklyName = getItemName(WeeklyURL)
-                # print(WeeklyName)
-                WeeklyCity = getWeeklyItemName(WeeklyName)
-                # print("Weekly Item City: " + WeeklyCity)
-                WeeklyJSON = {
-                    "City": WeeklyCity,
-                    "Name": WeeklyName,
-                    "Star": WeeklyStarsPic,
-                    "Source": WeeklyPic
-                }
-
-                # 加载角色主页面
-                characterInfo = getCharInfo("https://genshin.honeyhunterworld.com/db/char/" + KeyName + "/?lang=CHS")
-
-                # 写入该角色数据
-                thisCharacterDict["Element"] = Element
-                thisCharacterDict["Key"] = KeyName
-                thisCharacterDict["City"] = CharacterCity
-                thisCharacterDict["Star"] = CharacterRarity
-                thisCharacterDict["Name"] = Name
-                thisCharacterDict["Talent"] = TalentJson
-                thisCharacterDict["Boss"] = BOSS_Json
-                thisCharacterDict["GemStone"] = GemStoneJSON
-                thisCharacterDict["Local"] = LocalJSON
-                thisCharacterDict["Monster"] = MonsterJSON
-                thisCharacterDict["Weekly"] = WeeklyJSON
-                thisCharacterDict["CharStat"] = characterInfo[0]
-                thisCharacterDict["Constellation"] = characterInfo[1]
-                thisCharacterDict["NormalAttack"] = characterInfo[2]
-                thisCharacterDict["TalentE"] = characterInfo[3]
-                thisCharacterDict["TalentQ"] = characterInfo[4]
-                thisCharacterDict["PassiveTalents"] = characterInfo[5]
-                thisCharacterDict["Title"] = characterInfo[6]
-                thisCharacterDict["AstrolabeName"] = characterInfo[7]
-                thisCharacterDict["Description"] = characterInfo[8]
-                thisCharacterDict["Profile"] = characterInfo[9]
-                thisCharacterDict["Source"] = characterInfo[10]
-                thisCharacterDict["GachaCard"] = characterInfo[11]
-                thisCharacterDict["GachaSplash"] = characterInfo[12]
-
-                allCharactersList.append(thisCharacterDict)
+        beta_url = "https://genshin.honeyhunterworld.com/db/char/unreleased-and-upcoming-characters/?lang=CHS"
+        r = requests.get(beta_url)
+        soup = BeautifulSoup(r.text, 'lxml')
+        character_list = soup.find_all('div', {'class': 'char_sea_cont'})
+        beta_characters_list = dealCharacterList(character_list, True, timestampString)
+        allCharactersList = live_characters_list + beta_characters_list
 
         # Fix Yanfei Error
         for character in allCharactersList:
@@ -656,10 +672,7 @@ def getAllCharacters(getBetaCharacters: False, timestampString):
 
         newFileList = json.dumps(allCharactersList, ensure_ascii=False, indent=4, separators=(',', ':'))
 
-        if getBetaCharacters:
-            newFileName = "./data/od21/Metadata/characters-beta-" + timestampString + ".json"
-        else:
-            newFileName = "./data/od21/Metadata/characters-" + timestampString + ".json"
+        newFileName = "./data/od21/Metadata/characters-" + timestampString + ".json"
         f_output = open(newFileName, mode="w", encoding='utf-8')
         f_output.write(newFileList)
         f_output.close()

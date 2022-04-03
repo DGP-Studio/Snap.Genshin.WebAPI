@@ -32,7 +32,7 @@ About this API: [https://github.com/DGP-Studio/Snap.Genshin.WebAPI](https://gith
 app = FastAPI(
     title="SnapGenshinWebAPI",
     description=description,
-    version="1.8.2",
+    version="1.9",
     redoc_url=None,
     #docs_url=None,
     terms_of_service="https://www.snapgenshin.com/documents/statement/user-privacy-notice.html",
@@ -55,10 +55,6 @@ LastPatchCacheTimestamp = ""
 LastCharactersVersionCheckTime = 0
 LastCharactersVersionMakeTime = 0
 LatestCharactersVersion = ""
-# 内存缓存 - 测试角色JSON
-LastBetaCharactersVersionCheckTime = 0
-LastBetaCharactersVersionMakeTime = 0
-LatestBetaCharactersVersion = ""
 # CharactersDict = ""
 # 内存缓存 - 公告
 manifestoCache = ""
@@ -257,7 +253,7 @@ def getManifesto():
 
 
 # 刷新角色信息缓存
-@app.post("/characters/refreshMeta/live", status_code=200)
+@app.post("/characters/refreshMeta", status_code=200)
 def refreshCharacterMeta(background_tasks: BackgroundTasks, userSentData: EncryptedPost, response: Response):
     """
     :return: result: 'OK' if new task generated, 'pending' if a previous task is ongoing
@@ -269,7 +265,7 @@ def refreshCharacterMeta(background_tasks: BackgroundTasks, userSentData: Encryp
         if currentTimestamp - LastCharactersVersionMakeTime < 600:
             return {"result": "skipped"}
         else:
-            background_tasks.add_task(crawler.getAllCharacters, False, str(currentTimestamp))
+            background_tasks.add_task(crawler.getAllCharacters, str(currentTimestamp))
             LastCharactersVersionMakeTime = currentTimestamp
             return {"result": "OK"}
     else:
@@ -278,7 +274,7 @@ def refreshCharacterMeta(background_tasks: BackgroundTasks, userSentData: Encryp
 
 
 # 获取角色信息
-@app.get("/characters/live", status_code=200)
+@app.get("/characters", status_code=200)
 def getLatestCharacters(background_tasks: BackgroundTasks):
     global LastCharactersVersionCheckTime, LatestCharactersVersion, LastCharactersVersionMakeTime
     # If there is memory cache, return it
@@ -302,64 +298,11 @@ def getLatestCharacters(background_tasks: BackgroundTasks):
             return {"result": "OK", "message": "new IO cache returned", "timestamp": LatestCharactersVersion}
         else:
             # 无任何缓存的极端情况
-            background_tasks.add_task(crawler.getAllCharacters, False, str(currentTimestamp))
+            background_tasks.add_task(crawler.getAllCharacters, str(currentTimestamp))
             LastCharactersVersionMakeTime = currentTimestamp
             return {"result": "failed", "message": "Making new cache", "timestamp": str(currentTimestamp)}
     else:
         return {"result": "OK", "message": "memory cache returned", "timestamp": LatestCharactersVersion}
-
-
-# 刷新测试角色信息缓存
-@app.post("/characters/refreshMeta/beta", status_code=200)
-def refreshCharacterMeta(background_tasks: BackgroundTasks, userSentData: EncryptedPost, response: Response):
-    """
-    :return: result: 'OK' if new task generated, 'pending' if a previous task is ongoing
-    """
-    global LastBetaCharactersVersionMakeTime
-    userSentData = userSentData.dict()
-    if verifyKey(userSentData['key'], userSentData['parameter']):
-        currentTimestamp = int(time.time())
-        if currentTimestamp - LastBetaCharactersVersionMakeTime < 600:
-            return {"result": "skipped"}
-        else:
-            background_tasks.add_task(crawler.getAllCharacters, True, str(currentTimestamp))
-            LastBetaCharactersVersionMakeTime = currentTimestamp
-            return {"result": "OK"}
-    else:
-        response.status_code = status.HTTP_403_FORBIDDEN
-        return {'result': 'failed'}
-
-
-# 获取测试角色信息
-@app.get("/characters/beta", status_code=200)
-def getLatestCharacters(background_tasks: BackgroundTasks):
-    global LastBetaCharactersVersionCheckTime, LatestBetaCharactersVersion, LastBetaCharactersVersionMakeTime
-    # If there is memory cache, return it
-    currentTimestamp = int(time.time())
-    if currentTimestamp - LastBetaCharactersVersionCheckTime > 600:
-        #print("currentTimestamp: " + str(currentTimestamp))
-        #print("LastBetaCharactersVersionCheckTime: " + str(LastBetaCharactersVersionCheckTime))
-        LastBetaCharactersVersionCheckTime = currentTimestamp
-        files = os.listdir("./data/od21/Metadata/")
-        latestTimestamp = 0
-        for file in files:
-            timestamp = re.search("(beta-)(\d)+", file)
-            if timestamp is not None:
-                timestamp = timestamp[0].replace("beta-", "")
-                if int(timestamp) > latestTimestamp:
-                    latestTimestamp = int(timestamp)
-        if latestTimestamp != 0:
-            # 将IO结果中最新的缓存写入内存
-            print("has assigned timestamp " + str(latestTimestamp) + " to cache")
-            LatestBetaCharactersVersion = str(latestTimestamp)
-            return {"result": "OK", "message": "new IO cache returned", "timestamp": LatestBetaCharactersVersion}
-        else:
-            # 无任何缓存的极端情况
-            background_tasks.add_task(crawler.getAllCharacters, True, str(currentTimestamp))
-            LastBetaCharactersVersionMakeTime = currentTimestamp
-            return {"result": "failed", "message": "Making new cache", "timestamp": str(currentTimestamp)}
-    else:
-        return {"result": "OK", "message": "memory cache returned", "timestamp": LatestBetaCharactersVersion}
 
 
 @app.get("/plugin/update/{PluginName}", status_code=200)
