@@ -276,12 +276,11 @@ def refreshCharacterMeta(background_tasks: BackgroundTasks, userSentData: Encryp
 # 获取角色信息
 @app.get("/characters", status_code=200)
 def getLatestCharacters(background_tasks: BackgroundTasks):
-    global LastCharactersVersionCheckTime, LatestCharactersVersion, LastCharactersVersionMakeTime
+    global LastCharactersVersionCheckTime, LastCharactersVersionMakeTime  # Integers
+    global LatestCharactersVersion                                        # String
     # If there is memory cache, return it
     currentTimestamp = int(time.time())
     if currentTimestamp - LastCharactersVersionCheckTime > 600:
-        #print("currentTimestamp: " + str(currentTimestamp))
-        #print("LastCharactersVersionCheckTime: " + str(LastCharactersVersionCheckTime))
         LastCharactersVersionCheckTime = currentTimestamp
         files = os.listdir("./data/od21/Metadata/")
         latestTimestamp = 0
@@ -301,8 +300,18 @@ def getLatestCharacters(background_tasks: BackgroundTasks):
             background_tasks.add_task(crawler.getAllCharacters, str(currentTimestamp))
             LastCharactersVersionMakeTime = currentTimestamp
             return {"result": "failed", "message": "Making new cache", "timestamp": str(currentTimestamp)}
+    elif LastCharactersVersionMakeTime != 0:
+        newJSON_exist = os.path.exists("./data/od21/Metadata/" + str(LastCharactersVersionMakeTime) + ".json")
+        if newJSON_exist:
+            LatestCharactersVersion = LastCharactersVersionMakeTime
+            LastCharactersVersionMakeTime = 0
+            LastCharactersVersionCheckTime = currentTimestamp
+            return {"result": "OK", "message": "memory cache returned", "timestamp": str(LatestCharactersVersion)}
+        else:
+            return {"result": "failed", "message": "waiting new cache", "timestamp": str(LastCharactersVersionMakeTime)}
+
     else:
-        return {"result": "OK", "message": "memory cache returned", "timestamp": LatestCharactersVersion}
+        return {"result": "OK", "message": "memory cache returned", "timestamp": str(LatestCharactersVersion)}
 
 
 @app.get("/plugin/update/{PluginName}", status_code=200)
