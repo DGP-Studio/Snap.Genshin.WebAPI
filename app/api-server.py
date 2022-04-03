@@ -32,7 +32,7 @@ About this API: [https://github.com/DGP-Studio/Snap.Genshin.WebAPI](https://gith
 app = FastAPI(
     title="SnapGenshinWebAPI",
     description=description,
-    version="1.9",
+    version="1.9.1",
     redoc_url=None,
     #docs_url=None,
     terms_of_service="https://www.snapgenshin.com/documents/statement/user-privacy-notice.html",
