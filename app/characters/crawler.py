@@ -537,7 +537,7 @@ def getAllCharacters(getBetaCharacters: False, timestampString):
                 # print(GenStoneStarsPic)
                 GenStonePic = rootURL + Materials[2].find("div").find("img", {"class": "lazy"})["data-src"]
                 # print(GenStonePic)
-                GenStonePic = GenStonePic.replace("_35.png", "")
+                GenStonePic = GenStonePic.replace("_35.png", ".png")
                 # print(GenStonePic)
                 GenStoneURL = "https://genshin.honeyhunterworld.com/db/item/" + re.search("(i_)(\d)+", GenStonePic)[
                     0] + "/?lang=CHS"
@@ -659,7 +659,7 @@ def getAllCharacters(getBetaCharacters: False, timestampString):
             newFileName = "./data/od21/Metadata/characters-beta-" + timestampString + ".json"
         else:
             newFileName = "./data/od21/Metadata/characters-" + timestampString + ".json"
-        f_output = open(newFileName, mode="a", encoding='utf-8')
+        f_output = open(newFileName, mode="w", encoding='utf-8')
         f_output.write(newFileList)
         f_output.close()
         print("Successfully write new characters.json")
