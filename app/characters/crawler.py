@@ -631,10 +631,9 @@ def getAllCharacters(getBetaCharacters: False, timestampString):
                 thisCharacterDict["GachaSplash"] = characterInfo[12]
 
                 allCharactersList.append(thisCharacterDict)
-        newFileList = json.dumps(allCharactersList, ensure_ascii=False, indent=4, separators=(',', ':'))
 
         # Fix Yanfei Error
-        for character in newFileList:
+        for character in allCharactersList:
             if character['Key'] == "feiyan":
                 stat = character["TalentQ"]["Table"]
                 # print(stat)
@@ -654,6 +653,8 @@ def getAllCharacters(getBetaCharacters: False, timestampString):
                 for key in character["TalentQ"]["Table"][5]['Values']:
                     character["TalentQ"]["Table"][5]['Values'][key] = "80"
         # Fix Yanfei Error
+
+        newFileList = json.dumps(allCharactersList, ensure_ascii=False, indent=4, separators=(',', ':'))
 
         if getBetaCharacters:
             newFileName = "./data/od21/Metadata/characters-beta-" + timestampString + ".json"
