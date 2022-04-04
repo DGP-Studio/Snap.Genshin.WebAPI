@@ -10,6 +10,7 @@ from fastapi import FastAPI, Response, status, BackgroundTasks, HTTPException
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from app.characters import crawler
+
 # from fastapi import Depends, FastAPI, HTTPException
 # from sqlalchemy.orm import Session
 
@@ -32,9 +33,9 @@ About this API: [https://github.com/DGP-Studio/Snap.Genshin.WebAPI](https://gith
 app = FastAPI(
     title="SnapGenshinWebAPI",
     description=description,
-    version="1.9.1",
+    version="1.10",
     redoc_url=None,
-    #docs_url=None,
+    # docs_url=None,
     terms_of_service="https://www.snapgenshin.com/documents/statement/user-privacy-notice.html",
     license_info={
         "name": "MIT License",
@@ -61,6 +62,10 @@ manifestoCache = ""
 # 全局变量 - 插件库
 with open("./config/config.json", 'r', encoding='utf-8') as setting_json:
     ACCEPT_PLUGINS = json.load(setting_json)['accepted-plugin']
+# 全局变量 - dotNet信息
+with open("./data/dotNet.json", 'r', encoding='utf-8') as dotNet_json:
+    dotNetVersion = dotNet_json["Version"]
+    dotNetDownloadURL = dotNet_json["URL"]
 # 内存缓存
 PluginVersionCache = {}
 for plugin in ACCEPT_PLUGINS:
@@ -277,7 +282,7 @@ def refreshCharacterMeta(background_tasks: BackgroundTasks, userSentData: Encryp
 @app.get("/characters", status_code=200)
 def getLatestCharacters(background_tasks: BackgroundTasks):
     global LastCharactersVersionCheckTime, LastCharactersVersionMakeTime  # Integers
-    global LatestCharactersVersion                                        # String
+    global LatestCharactersVersion  # String
     # If there is memory cache, return it
     currentTimestamp = int(time.time())
     if currentTimestamp - LastCharactersVersionCheckTime > 600:
@@ -341,3 +346,26 @@ def getPluginVersion(PluginName: str):
         return NewCache
     else:
         return PluginVersionCache[PluginName]
+
+
+@app.get("/requirement/dotNet", status_code=200)
+def getDotNetVersion():
+    result = {
+        "version": dotNetVersion,
+        "url": dotNetDownloadURL
+    }
+    return result
+
+
+@app.post("/requirement/dotNet/refresh", status_code=200)
+def refreshCharacterMeta(userSentData: EncryptedPost, response: Response):
+    global dotNetVersion, dotNetDownloadURL
+    userSentData = userSentData.dict()
+    if verifyKey(userSentData['key'], userSentData['parameter']):
+        with open("./data/dotNet.json", 'r', encoding='utf-8') as dotNet_json:
+            dotNetVersion = dotNet_json["Version"]
+            dotNetDownloadURL = dotNet_json["URL"]
+        return {"result": "OK"}
+    else:
+        response.status_code = status.HTTP_403_FORBIDDEN
+        return {'result': 'failed'}
