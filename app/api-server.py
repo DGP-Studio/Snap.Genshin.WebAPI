@@ -7,6 +7,7 @@ import json
 import requests
 import hashlib
 from fastapi import FastAPI, Response, status, BackgroundTasks, HTTPException
+from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from app.characters import crawler
@@ -33,7 +34,7 @@ About this API: [https://github.com/DGP-Studio/Snap.Genshin.WebAPI](https://gith
 app = FastAPI(
     title="SnapGenshinWebAPI",
     description=description,
-    version="1.10",
+    version="1.10.1",
     redoc_url=None,
     # docs_url=None,
     terms_of_service="https://www.snapgenshin.com/documents/statement/user-privacy-notice.html",
@@ -356,6 +357,11 @@ def getDotNetVersion():
         "url": dotNetDownloadURL
     }
     return result
+
+
+@app.get("/requirement/dotNet/download", status_code=200)
+def getDotNet_redirect():
+    return RedirectResponse(dotNetDownloadURL)
 
 
 @app.post("/requirement/dotNet/refresh", status_code=200)
