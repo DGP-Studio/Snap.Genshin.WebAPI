@@ -64,6 +64,7 @@ with open("./config/config.json", 'r', encoding='utf-8') as setting_json:
     ACCEPT_PLUGINS = json.load(setting_json)['accepted-plugin']
 # 全局变量 - dotNet信息
 with open("./data/dotNet.json", 'r', encoding='utf-8') as dotNet_json:
+    dotNet_json = json.load(dotNet_json)
     dotNetVersion = dotNet_json["Version"]
     dotNetDownloadURL = dotNet_json["URL"]
 # 内存缓存
