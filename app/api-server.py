@@ -34,7 +34,7 @@ About this API: [https://github.com/DGP-Studio/Snap.Genshin.WebAPI](https://gith
 app = FastAPI(
     title="SnapGenshinWebAPI",
     description=description,
-    version="1.10.1",
+    version="1.11",
     redoc_url=None,
     # docs_url=None,
     terms_of_service="https://www.snapgenshin.com/documents/statement/user-privacy-notice.html",
@@ -53,6 +53,9 @@ GlobalStablePatch = {}
 CNStablePatch = {}
 LatestRelease = ""
 LastPatchCacheTimestamp = ""
+# 内存缓存 - 安装器版本分发
+PyInstaller_LatestRelease = ""
+PyInstaller_LastPatchCacheTimestamp = ""
 # 内存缓存 - 角色JSON
 LastCharactersVersionCheckTime = 0
 LastCharactersVersionMakeTime = 0
@@ -158,8 +161,19 @@ def checkPatchMetaExpiration():
         refreshPatchMeta()
 
 
-# 设置主页
-# app.mount("/", StaticFiles(directory="static", html=True), name="static")
+# 刷新PyInstaller版本信息
+def refreshPyinstallerPatchMeta():
+    global PyInstaller_LatestRelease
+    githubAPIResult = requests.get("https://api.github.com/repos/Masterain98/Snap.Genshin.PyInstaller/releases/latest")
+    PyInstaller_LatestRelease = json.loads(githubAPIResult.text)["tag_name"]
+    return PyInstaller_LatestRelease
+
+
+# 检查PyInstaller版本信息是否过期
+def checkPyinstallerPatchMetaExpiration():
+    global cacheTime
+    if PyInstaller_LastPatchCacheTimestamp == "" or (int(time.time()) - int(PyInstaller_LastPatchCacheTimestamp) > cacheTime):
+        refreshPyinstallerPatchMeta()
 
 
 # 管理相关
@@ -194,6 +208,13 @@ def forceRefreshCache(userSentData: EncryptedPost, response: Response):
         response.status_code = status.HTTP_403_FORBIDDEN
         return {'result': 'failed'}
 
+
+# Python安装器版本分发API
+@app.get('/installer/patch')
+def getInstallerVersion():
+    checkPyinstallerPatchMetaExpiration()
+    global PyInstaller_LatestRelease
+    return PyInstaller_LatestRelease
 
 # 全球区版本分发API
 @app.get('/patch/stable/global')
