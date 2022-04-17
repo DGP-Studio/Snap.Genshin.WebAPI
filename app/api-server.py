@@ -75,6 +75,9 @@ with open("./data/dotNet.json", 'r', encoding='utf-8') as dotNet_json:
 PluginVersionCache = {}
 for plugin in ACCEPT_PLUGINS:
     PluginVersionCache[plugin] = ""
+# Post Key
+with open("./config/config.json", 'r', encoding='utf-8') as setting_json:
+    currentKey = json.load(setting_json)['key']
 
 
 class EncryptedPost(BaseModel):
@@ -85,8 +88,6 @@ class EncryptedPost(BaseModel):
 
 # 验证POST Key
 def verifyKey(encryptedKey, keyParameter):
-    with open("./config/config.json", 'r', encoding='utf-8') as setting_json:
-        currentKey = json.load(setting_json)['key']
     # 加密方法
     keyValue = currentKey + keyParameter[::-1] + "masterain"
     correctKey = hashlib.md5(keyValue.encode('utf-8')).hexdigest()
