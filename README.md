@@ -30,7 +30,7 @@ docker run -itp 3051:8080 \
 cp backup/data/* data/
 cp backup/config/* config/
 mkdir data/od21
-rclone mount od21:snapgenshin/ /data/wwwroot/api.snapgenshin.com/data/od21/ --daemon
+rclone mount SGODChina:snapgenshin/ /data/wwwroot/api.snapgenshin.com/data/od21/ --daemon
 docker restart SG-API-1.7
 ```
 
